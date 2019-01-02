@@ -1,78 +1,50 @@
 import axios from 'axios';
 import util from './util';
+import Vue from 'vue';
+import router from '../router';
+import {main} from '../../config/game' ;
 
 /**
- * 发起网络请求
+ * 全局axios , 携带 token 进行请求
  */
-class request
-{
-  constructor(){
-    
-    // 需要配置好跨域 请求字段为允许通过的字段
-    this.url = "http://192.168.0.252:8001/";
-    this.config = {
-      headers:{
-        'X-FengBao-Token':util.getStorage('token'),
-      },
-    }
-  }
-  
-  /**
-   * 同步post请求
-   * @param url 域名，如果没有http开头，则使用配置中的地址拼接
-   * @param data
-   * @returns {Promise<AxiosResponse<any>>}
-   */
-  syncPost(url,data) {
-    
-    let finalUrl = util.checkHttp(url) ? url : this.url+url;
-    // axios.post(finalUrl,data,this.config).then((response) => {
-    //   if(response.status === 200 ){
-    //     this.data = response.data;
-    //   }else {
-    //     this.data = '';
-    //   }
-    //   });
-    // return this.data ;
-    return axios.post(finalUrl,data,this.config);
-  }
-  
-  /**
-   * 同步get请求
-   * @param url 域名，如果没有http开头，则使用配置中的地址拼接
-   * @returns {Promise<AxiosResponse<any>>}
-   */
-  syncGet(url) {
-  
-    let finalUrl = util.checkHttp(url) ? url : this.url+url;
-    return axios.get(finalUrl,this.config).then(function (response) {
-      return response;
-    })
-    .catch(function (error) {
-      return error;
-    })
-  }
-  
-  /**
-   * @param url 域名，如果没有http开头，则使用配置中的地址拼接
-   * @param data 请求体中传递的数据
-   * @param method 方法，默认为post
-   * @returns {Promise<*>}
-   */
-  async asyncRequest(url,data,method='post'){
-  
-    let finalUrl = util.checkHttp(url) ? url : this.url+url;
-      try{
-        if(method === 'get'){
-          return await axios.get(finalUrl,this.config);
-        }else {
-          return await axios.post(finalUrl, data, this.config);
-        }
-      }catch (e) {
-        return e;
-      }
-  
-  }
-}
+axios.defaults.baseURL = main.url;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-export default new request();
+/**
+ * 添加一个请求拦截
+ */
+axios.interceptors.request.use(
+    function (config) {
+        config.headers.Authorization = 'bearer '+ localStorage.getItem("token");
+        return config;
+    },function(error){
+        return Promise.reject(error);
+});
+
+/**
+ * 添加一个响应拦截器
+ */
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    // conslole.log(error.response);
+    Vue.prototype.$Notice.error({
+        title:'无法预料的响应',
+        desc:'抱歉！无法继续数据访问，这是系统异常的访问, 请联系管理员',
+        duration:8,
+    });
+    // console.log('身份验证失败');
+    router.push('/login');
+    return Promise.reject(error);
+}) ;
+
+const API = {
+    POST(url,data,config={}) {
+        return axios.post(url,data,config);
+    },
+    GET(url,config={}) {
+        return axios.get(url,config) ;
+    },
+} ;
+
+export default API;

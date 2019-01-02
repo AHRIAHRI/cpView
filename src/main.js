@@ -19,11 +19,11 @@ Vue.use(iView);
 
 
 var app1 = new Vue({
-  el: '#app',
-  router,
-  components: {App},
-  template: '<App/>',
-  render: h => h(App),
+    el: '#app',
+    router,
+    components: {App},
+    template: '<App/>',
+    render: h => h(App),
 });
 
 

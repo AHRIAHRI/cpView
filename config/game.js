@@ -1,3 +1,4 @@
+// 菜单栏的加载 ，一个页面对应一个组建
 const menu = [
     {
       alias:'营运数据',
@@ -73,10 +74,30 @@ const menu = [
     subMeun:[
       {alias:'选择项目',name:'',addr:'/sys/form'},
       {alias:'日志翻译',name:'',addr:'/sys/countUp'},
+      {alias:'退出登录',name:'',addr:'/sys/logout'},
+    ]
+  },
+  {
+    alias:'测试数据1',
+    name:'testdata',
+    icon:'ios-cog-outline',
+    subMeun:[
+      {alias:'测试1',name:'',addr:'/test/one'},
+      {alias:'测试2',name:'',addr:'/test/two'},
     ]
   },
   
 ] ;
+// 域名的加载
+const main = {
+  url:(function () {
+    if( process.env.NODE_ENV === 'development') {
+      return 'http://data.apidev.fengbaogame.cn/api/v1/';
+    }
+    return 'http://data.api.fengbaogame.cn'
+  })(),
+};
 
-
-export default menu;
+export {
+  menu,main
+};

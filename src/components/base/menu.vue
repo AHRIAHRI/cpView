@@ -26,7 +26,7 @@
 
 </style>
 <script>
-  import menu from "../../../config/game";
+  import { menu  } from "../../../config/game";
 
   export default {
     data () {

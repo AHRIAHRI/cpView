@@ -5,7 +5,7 @@ import Util from '../mode/util';
 
 Vue.use(Router);
 const router = new Router({
-    mode:'history',
+    // mode:'history',
     routes: [
         {path: '/login', name: 'login', component: Util.loadComponents('/login')},
         {path: '/', component: Util.loadComponents('/base/menu'),
@@ -20,7 +20,7 @@ router.beforeEach((to,from,next)=>{
     if(to.name !== 'login' && ! Util.checkLogin() ) {
         Vue.prototype.$Notice.error({
             title:'请先登录',
-            desc:'抱歉！您无法继续数据访问，因为尚未取得相关凭证',
+            desc:'抱歉！您尚未取得凭证,无法继续数据访问.',
             duration:8,
         });
         router.push('/login');

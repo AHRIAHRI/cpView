@@ -72,9 +72,9 @@ const menu = [
     name:'systemSet',
     icon:'ios-cog-outline',
     subMeun:[
-      {alias:'选择项目',name:'',addr:'/sys/form'},
+      {alias:'用户设置',name:'',addr:'/sys/userset'},
       {alias:'日志翻译',name:'',addr:'/sys/countUp'},
-      {alias:'退出登录',name:'',addr:'/sys/logout'},
+      // {alias:'退出登录',name:'',addr:'/sys/logout'},
     ]
   },
   {
@@ -84,20 +84,13 @@ const menu = [
     subMeun:[
       {alias:'测试1',name:'',addr:'/test/one'},
       {alias:'测试2',name:'',addr:'/test/two'},
+      {alias:'测试3',name:'',addr:'/test/three'},
     ]
   },
   
 ] ;
-// 域名的加载
-const main = {
-  url:(function () {
-    if( process.env.NODE_ENV === 'development') {
-      return 'http://data.apidev.fengbaogame.cn/api/v1/';
-    }
-    return 'http://data.api.fengbaogame.cn'
-  })(),
-};
+
 
 export {
-  menu,main
+  menu,
 };

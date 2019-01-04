@@ -1,17 +1,15 @@
 <template>
     <div>
-      game路由组件 ,{{main.url}}
+      game路由组件 ,{{main}}
     </div>
 </template>
 
 <script>
-  import { main } from '../../../../config/game';
-  // import { main } from '@@@/game';
 	export default {
 		name: "game",
     data(){
 		  return {
-        main:main,
+        main:process.env.NODE_ENV,
       }
     }
 	}

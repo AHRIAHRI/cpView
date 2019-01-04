@@ -1,13 +1,14 @@
 import axios from 'axios';
-import util from './util';
 import Vue from 'vue';
 import router from '../router';
-import {main} from '../../config/game' ;
+import { main } from 'Config/game' ;
 
 /**
  * 全局axios , 携带 token 进行请求
  */
-axios.defaults.baseURL = main.url;
+if( process.env.NODE_ENV === 'production') {
+    axios.defaults.baseURL = 'http://data.apidev.fengbaogame.cn/api/v1/';
+}
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 /**
@@ -27,19 +28,17 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    // conslole.log(error.response);
     Vue.prototype.$Notice.error({
-        title:'无法预料的响应',
-        desc:'抱歉！无法继续数据访问，这是系统异常的访问, 请联系管理员',
+        title:'无法预知的错误',
+        desc:'抱歉！出现系统异常的访问, 请联系管理员',
         duration:8,
     });
-    // console.log('身份验证失败');
     router.push('/login');
     return Promise.reject(error);
 }) ;
 
 const API = {
-    POST(url,data,config={}) {
+    POST(url,data={},config={}) {
         return axios.post(url,data,config);
     },
     GET(url,config={}) {

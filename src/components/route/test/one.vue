@@ -6,7 +6,6 @@
 </template>
 
 <script>
-    import API  from '../../../mode/request';
 	export default {
 		name: "one",
         data(){
@@ -18,7 +17,7 @@
 
         },
         mounted: function(){
-                API.POST('/test/set',{data:111,data2:1231}).then(
+                this.$API.POST('/test/set',{data:111,data2:1231}).then(
                     (response) => {
                         this.abc = response.data;
                     }

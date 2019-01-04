@@ -1,23 +1,26 @@
 /* eslint-disable */
 // The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+// has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+/**
+ * 加载iView插件
+ */
 import iView  from 'iview';
-import 'iview/dist/styles/iview.css'
+import 'iview/dist/styles/iview.css' ;
+Vue.use(iView);
+
+
+/**
+ *  Load my custom plugins
+ *  global component and same object
+ */
+import plugin from './mode';
+Vue.use(plugin);
 
 Vue.config.productionTip = false ;
-
-// 加载组件
-// data=()=>require('./components/base/top')
-// Vue.component('cpData-top',()=>import('./components/base/top'));
-
-Vue.use(iView);
-/* eslint-disable no-new */
-
-
 var app1 = new Vue({
     el: '#app',
     router,

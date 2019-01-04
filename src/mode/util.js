@@ -1,7 +1,8 @@
 /**
  * 工具类
  */
-import  { menu }  from '../../config/game';
+
+import  { menu }  from 'Config/game';
 const Util =
 {
     setStorage(data){
@@ -21,8 +22,35 @@ const Util =
         return  url.indexOf('http') === 0 ;
     },
     
+    /**
+     * Rsync Load Components
+     * @param path
+     * @returns {function(): (Promise<*>|*)}
+     */
     loadComponents(path){
         return () => import('@/components' + path);
+    },
+    
+    /**
+     *  Async Load Components
+     * @param path
+     * @returns {function(): {component: (Promise<*>|*), loading: *, error: *, delay: number, timeout: number}}
+     * @constructor
+     */
+    AsyncComponent(path){
+        return () => ({
+            component: import('@/components' + path),
+            loading: LoadingComponent,
+            error: ErrorComponent,
+            delay: 1000,
+            timeout: 3000
+        }) ;
+    },
+    /**
+     * Force page refresh
+     */
+    windowsReload(){
+        window.location.reload() ;
     },
     
     generateRouteComponents(){

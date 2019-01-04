@@ -13,22 +13,11 @@
       </Submenu>
   </Menu>
   <br>
-  <!--<p>Change theme</p>-->
-  <!--<RadioGroup v-model="theme1">-->
-    <!--<Radio label="light"></Radio>-->
-    <!--<Radio label="dark"></Radio>-->
-    <!--<Radio label="primary"></Radio>-->
-  <!--</RadioGroup>-->
-
   <div style="width: 90%;margin: auto">  <router-view/></div>
 
   </div>
 </template>
 <style scoped>
-.menu {
-    height:10px;
-    border: #2b85e4;
-}
 
 </style>
 <script>

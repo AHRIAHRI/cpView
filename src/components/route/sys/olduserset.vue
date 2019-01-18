@@ -38,7 +38,7 @@
             select (index) {
                 let code = this.data1[index].code ;
                 let name = this.data1[index].name ;
-                this.$API.POST('/sys/change',{select:code}).then(({data}) => {
+                this.$API.POST('/sys/useSet/select',{select:code}).then(({data}) => {
                     if(data === 'success'){
                         this.$Util.setStorage({project:name});
                         this.$Notice.success({
@@ -62,7 +62,7 @@
             }
 	    },
         mounted:function(){
-		    this.$API.POST('/sys/allproject').then((response) => {
+		    this.$API.POST('/sys/useSet/all').then((response) => {
 		        console.log(response.data);
 		        this.data1 = response.data;
 		        }

@@ -1,5 +1,6 @@
 <template>
-  <div  >
+  <div style="margin: auto" >
+      <div  style="height: 200px"></div>
       <Row >
           <Col span="6" push="18"><Input v-model="user" placeholder="账号" clearable style="width: 200px" /></Col></Row>
   <br>
@@ -19,7 +20,6 @@
             getdata:'',
             mesg:'',
       }
-
     },
     methods:{
         onsubmit:function (user,passwd) {
@@ -28,7 +28,7 @@
                     if(resp.status === 200 && resp.headers.authorization ){
                         // console.log(resp);
                         this.$Util.setStorage({token:resp.headers.authorization});
-                        this.$router.push('/');
+                        this.$router.push('/select');
                     }else{
                         this.$Notice.error({
                             title:'验证失败',
@@ -41,14 +41,17 @@
         jumptohome:function () {
             this.$router.push('/')
             },
+        },
+    mounted:function () {
+            // TODO 检测TOken是否合法，如果是直接登录
+        if(this.$Util.getStorage('token')){
+            // this.$router.push('/');
         }
+    }
+
     }
 </script>
 <style scoped>
-    .login {
-        width: 100%;
-        text-align: right;
-        /*border: 1px dotted black;*/
-    }
+
 
 </style>

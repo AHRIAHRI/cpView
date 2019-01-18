@@ -30,11 +30,11 @@
                 this.tipShow = true ;
                 this.value='';
                 this.disable = !this.disable ;
-                this.$emit('sendTime', '');
+                this.$emit('send_time', '');
             },
             changeTime(time) {
                 this.tipShow = true ;
-                this.$emit('sendTime', time);
+                    this.$emit('send_time', time);
             },
         },
         computed:{

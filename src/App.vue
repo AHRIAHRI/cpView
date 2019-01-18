@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!--<img src="./assets/logo.png">-->
-    <router-view/>
+      <router-view name="main"></router-view>
+      <router-view/>
   </div>
 </template>
 
@@ -20,5 +21,7 @@
     /*text-align: center;*/
     /*color: #2c3e50;*/
     /*margin-top: 20px;*/
+      width: 90%;
+      margin: auto;
   }
 </style>

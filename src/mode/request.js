@@ -2,7 +2,6 @@ import axios from 'axios';
 import Vue from 'vue';
 import router from '../router';
 import { main } from 'Config/game' ;
-
 /**
  * 全局axios , 携带 token 进行请求
  */
@@ -26,14 +25,22 @@ axios.interceptors.request.use(
  * 添加一个响应拦截器
  */
 axios.interceptors.response.use(function (response) {
-    return response;
+    if(response.data === 'permissionIsNotDefined'){
+        // this.$Modal.error({
+        Vue.prototype.$Modal.error({
+            title: '抱歉! 权限不足',
+            content: '请联系管理员',
+        });
+    }else{
+        return response;
+    }
 }, function (error) {
+    router.push('login');
     Vue.prototype.$Notice.error({
         title:'无法预知的错误',
         desc:'抱歉！出现系统异常的访问, 请联系管理员',
         duration:8,
     });
-    router.push('/login');
     return Promise.reject(error);
 }) ;
 
@@ -44,6 +51,7 @@ const API = {
     GET(url,config={}) {
         return axios.get(url,config) ;
     },
+
 } ;
 
 export default API;

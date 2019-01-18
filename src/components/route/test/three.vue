@@ -1,7 +1,7 @@
 <template>
   <div>
       <Row>
-    <CustomData @sendTime="getSelectTime"></CustomData>
+    <CustomData @send_time="getSelectTime"></CustomData>
       <!--<loading :show="loadShow"></loading>-->
       {{datetime}}</Row>
   </div>

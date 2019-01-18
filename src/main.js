@@ -4,6 +4,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+
 
 /**
  * 加载iView插件
@@ -11,7 +13,6 @@ import router from './router'
 import iView  from 'iview';
 import 'iview/dist/styles/iview.css' ;
 Vue.use(iView);
-
 
 /**
  *  Load my custom plugins
@@ -21,9 +22,10 @@ import plugin from './mode';
 Vue.use(plugin);
 
 Vue.config.productionTip = false ;
-var app1 = new Vue({
+new Vue({
     el: '#app',
     router,
+    store,
     components: {App},
     template: '<App/>',
     render: h => h(App),

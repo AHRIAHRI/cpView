@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Modal v-model="isShow" width="80%" :closable="false" :mask-closable="false" :scrollable="true" stripe>
+        <Modal v-model="isShow" width="80%" :closable="false"  stripe>
             <p slot="header" style="color:#19be6b;text-align:center">
                 <Icon type="ios-information-circle"></Icon>
                 <span>{{title}}</span>
@@ -9,7 +9,6 @@
                 <Table border  :columns="data.columns" :data="data.data"></Table>
             </div>
             <div slot="footer" style="width:80%;margin:auto" >
-                <Button type="success" long  @click="myclick">{{footerName}}</Button>
             </div>
         </Modal>
     </div>
@@ -20,18 +19,20 @@
 		name: "CustomModelShowTable",
         data(){
 		    return {
-		        data1:'',
+                title:'',
+                isShow:false,
+                data:{
+                    columns:[],
+                    data:[],
+                },
             }
         },
-        props:{
-		    title:String,
-		    isShow:Boolean,
-            data:Object,
-            footerName:String,
-        },
         methods:{
-		    myclick(){
-                this.$emit('closeModel');
+            loadFatherData(val){
+                this.isShow = val.isShow;
+                this.title = val.title;
+                this.data.data = val.data;
+                this.data.columns = val.columns;
             }
         }
 	}

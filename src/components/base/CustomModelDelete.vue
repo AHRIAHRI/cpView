@@ -1,16 +1,15 @@
 <template>
     <div>
-        <Modal v-model="isShow" width="60%" :closable="false" :mask-closable="false">
+        <Modal v-model="deleteDate.isShow" width="60%" >
             <p slot="header" style="color:#f60;text-align:center">
                 <Icon type="ios-information-circle"></Icon>
-                <span>{{title}}</span>
+                <span>{{deleteDate.title}}</span>
             </p>
             <div style="text-align:center">
-                {{data}}
+                {{deleteDate.data}}
             </div>
             <div slot="footer">
-                <Button type="success"  @click="myclick" style="width: 87%">不，这是我的误操作</Button>
-                    <Button type="error" style="width: 11%"  @click="del">{{footerName}}</Button>
+                    <Button type="error" style="width: 10%"  @click="del">{{deleteDate.footerName}}</Button>
             </div>
         </Modal>
     </div>
@@ -21,23 +20,42 @@
 		name: "CustomModelDelete",
         data(){
 		    return {
+		        deleteDate:{
+                    isShow:false,
+                    title:'',
+                    data:'',
+                    footerName:'',
+                    remoteAddr:'',
+                }
 
             }
         },
-        props:{
-            isShow:Boolean,
-            title:String,
-            data:String,
-            footerName:String,
-            remoteAddr:Array,
+        // props:{
+        //     isShow:Boolean,
+        //     title:String,
+        //     data:String,
+        //     footerName:String,
+        //     remoteAddr:Array,
+        // },
+        created:function(){
+
         },
         methods:{
 		    del(){
-		        this.$emit('sureDelData',this.remoteAddr);
+		        this.$emit('sureDelData',this.deleteDate.remoteAddr);
+		        this.myclick();
             },
             myclick(){
-                this.$emit('closeModel');
+                this.deleteDate.isShow = false ;
+            },
+            loadFatherData(val){
+                this.deleteDate.isShow = val.isShow;
+                this.deleteDate.title = val.title;
+                this.deleteDate.data = val.data;
+                this.deleteDate.footerName = val.footerName;
+                this.deleteDate.remoteAddr = val.remoteAddr;
             }
+
         }
 	}
 </script>

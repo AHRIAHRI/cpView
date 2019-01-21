@@ -2,12 +2,11 @@
     <div>
         <Table :columns="table.columns" :data="table.data" :show-header="false">
             <template  slot-scope="{ row , index}" slot="isSelect">
-                <div>{{row.k3}}</div>
                 <i-switch v-model="table.data[index]['k3']"  @on-change="onClick"/>
             </template>
         </Table>
-        {{this.table.data}}
-        <div>{{this.finalData}}</div>
+        <!--{{table.data}},-->
+        <!--<div>选择的列表：{{final}}</div>-->
     </div>
 </template>
 
@@ -16,7 +15,7 @@
 		name: "CustomShowModify",
         data(){
 		    return {
-                finalData:[],
+                final:[],
 		        abc:1,
                 table:{
 		            columns:[],
@@ -31,9 +30,9 @@
         created:function () {
             // 生成表单需要的数据
             this.table.columns = [
-                {title:'#1',key:'k1'},
-                {title:'#2',key:'k2'},
-                {title:'#3',slot:'isSelect'},
+                {title:'#1',key:'k1',align:'center'},
+                {title:'#2',key:'k2',align:'center'},
+                {title:'#3',slot:'isSelect',align:'center'},
             ];
             let tempDataFormat = [];
             for(let item of this.value){
@@ -50,7 +49,8 @@
                     finalData.push(Object.values(item));
                 }
 		        this.$emit('input',finalData);
-                this.finalData = finalData;
+                this.final = finalData;
+                // console.log('this.final:'+this.final)
             },
         }
 	}

@@ -1,7 +1,9 @@
 <template>
     <div>
-        <CustomModelShowTable :isShow="showRoleAclData.isShow" :title="showRoleAclData.title" :data="showRoleAclData.data" :footerName="showRoleAclData.footerName" @closeModel="closeRoleAcl"></CustomModelShowTable>
-        <CustomModelDelete  :isShow="deleteRoleAclData.isShow" :title="deleteRoleAclData.title" :data="deleteRoleAclData.data" :footerName="deleteRoleAclData.footerName" :remoteAddr="deleteRoleAclData.remoteAddr" @closeModel="closeRoleAcl" @sureDelData="deleteRole" ></CustomModelDelete>
+        <!--<CustomModelShowTable  ref="modelShow" ></CustomModelShowTable>-->
+        <changeUserRole ref="changeUserRole" @commitModify="commitModify" ></changeUserRole>
+        <CustomModelDelete  ref="modelDelete"  @sureDelData="deleteRole" ></CustomModelDelete>
+        <modelAuthorize ref="modifyAuthorize"  @commitModify="modifyRolePermission"></modelAuthorize>
         <Collapse simple v-model="defaultPanel"  accordion>
             <Panel name="1">
                 添加 / 删除 / 修改 角色
@@ -59,15 +61,9 @@
 
                     <div style="width: 90% ; margin: auto">
                             <Table size="small"  :columns="user.columns" :data="user.data" ></Table>
-                    <!--列出所有的用户 （用户名,电话,所有平台资源,初始角色,最终权限,上一次登录时间，修改密码，修改权限，）-->
                     </div>
                 </div>
             </Panel>
-            <!--<div style="height: 20px"></div>-->
-            <!--<Panel name="3">-->
-                <!--单用户操作权限-->
-                <!--<p slot="content">乔纳森·伊夫是一位工业设计师，现任Apple公司设计师兼资深副总裁，英国爵士。他曾参与设计了iPod，iMac，iPhone，iPad等众多苹果产品。除了乔布斯，他是对苹果那些著名的产品最有影响力的人。</p>-->
-            <!--</Panel>-->
         </Collapse>
         <div style="height: 100px"></div>
     </div>
@@ -142,19 +138,6 @@
                 newPasswd:{
 
                 },
-                showRoleAclData:{
-                    title:'',
-                    isShow:false,
-                    data:{columns:[],data:[]},
-                    footerName:'关闭查看',
-                },
-                deleteRoleAclData:{
-                    title:'确定要删除吗?',
-                    isShow:false,
-                    data:'',
-                    footerName:'是的, 我确定！',
-                },
-
                 // 请求需要加载的数据,
                 user:{
                     data:[
@@ -162,12 +145,7 @@
                             userName:'liaoxiaotao',
                             tel:1231231231,
                             platAndChannel:['融合/爱奇艺','所有'],
-                            beginRole:'管理员,客服',
-                            finalPermission:[
-                                {alias:'详细日志',lists:['查看数据','查看日志'],},
-                                {alias:'系统设置',lists:['用户设置']},
-                            ]
-                            ,
+                            userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
                             lastLogin:'1991-12-12 12:12:12',
                             lastLoginAddr:'192.138.1.1/召唤师峡谷',
                         },
@@ -175,16 +153,7 @@
                             userName:'jjjjjjj',
                             tel:12312312312,
                             platAndChannel:['融合/华为','所有'],
-                            beginRole:'射击尸',
-                            finalPermission:[
-                                {alias:'充值分析',lists:['查看数据','查看日志'],},
-                                {alias:'系统设置',lists:['用户设置']},
-                                {alias:'运营数据',lists:['运营数据1','运营数据2','运营数据3','运营数据4','运营数据5','运营数据6','运营数据74','运营数据9'],},
-                                {alias:'运营数据',lists:['运营数据1','运营数据2','运营数据3','运营数据4','运营数据5','运营数据6','运营数据74','运营数据9'],},
-                                {alias:'运营数据',lists:['运营数据1','运营数据2','运营数据3','运营数据4','运营数据5','运营数据6','运营数据74','运营数据9'],},
-                                {alias:'玩家分析',lists:['查看数据','查看日志'],},
-                                {alias:'系统设置',lists:['用户设置']},
-                            ],
+                            userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
                             lastLogin:'1991-12-12 12:12:12',
                             lastLoginAddr:'192.138.1.1/召唤师峡谷',
                         },
@@ -196,12 +165,19 @@
                         { title: '上一次登录地址', key: 'lastLoginAddr',align: 'center',minWidth:120},
                         { title: '角色分配',align: 'center',
                             render: (h, params) => {
+                                // 遍历出存在的uese列表，
+                                let temp = [];
+                                for (let item1 of params.row.userRole){
+                                    if(item1.status){
+                                        temp.push(item1.roleName)
+                                    }
+                                }
                                 return h('div', {
                                     props: {type:'ios-ulock-outline',size:24},
                                     on: {
                                         click: () => {this.modifyUserRole(params.row)}
                                     }
-                                }, params.row.beginRole);
+                                }, temp.join(',') ? temp.join(',') : '无角色权限' );
                             }
                         },
                         { title: '平台权限', key: 'abc',align: 'center',
@@ -212,26 +188,6 @@
                                         click: () => {this.showUserPlatAccess(params.row)}
                                     }
                                 }, '点击查看');
-                            }
-                        },
-                        { title: '查看权限',align: 'center',
-                            render: (h, params) => {
-                                return h('Icon', {
-                                    props: {type:'md-eye',size:24},
-                                    on: {
-                                        click: () => {this.showUserFinalAcl(params.row)}
-                                    }
-                                }, '点击查看');
-                            }
-                        },
-                        { title: '修改权限', key: 'abc',align: 'center',
-                            render: (h, params) => {
-                                return h('Icon', {
-                                    props: {type:'ios-cog-outline',size:24},
-                                    on: {
-                                        click: () => {this.modifyUserPermission(params.row)}
-                                    }
-                                }, '添加/删除权限');
                             }
                         },
                         { title: '修改密码',align: 'center', maxWidth:100,
@@ -263,30 +219,31 @@
                         roleName:'admin',
                         alias:'管理员',
                         // 列出角色所有的权限,
-                        showAcl:[
-                            {alias:'详细日志',lists:['查看数据','查看日志'],},
-                            {alias:'运营数据',lists:['运营数据1','运营数据2','运营数据3','运营数据4'],},
-                            {alias:'玩家分析',lists:['查看数据','查看日志'],},
-                            {alias:'系统设置',lists:['用户设置']},
-                        ],
-                        modifyAcl:'',
-                        delRole:'',
-                    },
+                        modifyAcl:[
+                            {menu:'充值分析',subMenu:[
+                                    ['/data/game/payer','物品货币',false],
+                                    ['/data/game/payer','商城分析',true],
+                                    ['/data/game/money','回本分析',true],
+                                ]
+                            },
+                            {menu:'详细日志',subMenu:[['/data/log/daily','充值日志',true]]},
+                            ],
+                        },
                     ],
                     columns:[
                         { title: '角色', key: 'roleName',align: 'center'},
                         { title: '中文名', key: 'alias',align: 'center'},
-                        { title: '所有权限', key: 'showAcl',align: 'center',
-                            render: (h, params) => {
-                                return h('Icon', {
-                                    props: {type:'md-eye',size:24,},
-                                    on: {
-                                        click: () => {this.showRoleAcl(params.row.showAcl)}
-                                    }
-                                }, '点击查看');
-                                }
-                            },
-                        { title: '修改权限', key: 'modifyAcl',align: 'center',
+                        // { title: '所有权限', key: 'showAcl',align: 'center',
+                        //     render: (h, params) => {
+                        //         return h('Icon', {
+                        //             props: {type:'md-eye',size:24,},
+                        //             on: {
+                        //                 click: () => {this.showRoleAcl(params.row.showAcl)}
+                        //             }
+                        //         }, '点击查看');
+                        //         }
+                        //     },
+                        { title: '查看/修改权限', key: 'modifyAcl',align: 'center',
                             render: (h, params) => {
                                 return h('Icon', {
                                     props: {type:'ios-cog-outline',size:24 },
@@ -373,9 +330,12 @@
             }
         },
         methods: {
+		    /**
+             *   删除角色
+             */
+
             deleteRole(val){
                 // 删除游戏逻辑
-                this.deleteRoleAclData.isShow = false;
                 // this.$API.POST(val[0],val[1]).then(({data}) => {
                 //     if(data === 'success'){
                         this.$Message.warning({
@@ -388,84 +348,65 @@
                 //     }
                 // })
             },
-            closeRoleAcl(){
-                this.showRoleAclData.isShow = false;
-                this.deleteRoleAclData.isShow = false;
-            },
-            showRoleAcl(val){
-                let arr = [] ;
-                for(let temp of val){
-                    for (let temp1 of temp.lists){
-                        arr.push({menu:temp.alias,subMenu:temp1})
-                    }
-                }
 
-                // 对话框表单格式
-                this.showRoleAclData.data.columns = [
-                    {title: '类目', key: 'alias', sortable: true , maxWidth:100,
-                        render: (h, params) => {
-                            return h('strong',{style:{color:'#2db7f5'}}, params.row.alias);
-                        }
-                    },
-                    {title: '子项目', key: 'lists',
-                        render: (h, params) => {
-                            return h('div', params.row.lists.join(' , '));
-                        }},
-                ];
-                this.showRoleAclData.data.data = val;
-                this.showRoleAclData.title = '查看角色所有权限';
-                this.showRoleAclData.footerName = '关闭查看';
-                this.showRoleAclData.isShow = true;
-            },
             // TODO 修改角色权限
             modifyRoleAcl(val){
-
+                let temp = {}  ;
+                temp.title = '修改的权限将影响所有拥有该角色的用户!';
+                temp.other = {role:val.roleName};
+                temp.arr = val.modifyAcl ;
+                this.$refs.modifyAuthorize.loadFatherData(temp);
             },
+
             deleteRoleAcl(val){
-                this.deleteRoleAclData.isShow = true;
-                this.deleteRoleAclData.title =  '确定删除 '+val.alias+'- [ ' + val.roleName + ' ]  吗?';
-                this.deleteRoleAclData.remoteAddr = ['/sys/userManage/roledel',{role:'liaoxia'}];
-                this.deleteRoleAclData.data = '所有拥有该角色的用户权限都将失效,继续吗?';
+                let temp = {};
+                temp.isShow = true;
+                temp.title =  '确定删除 '+val.alias+'- [ ' + val.roleName + ' ]  吗?';
+                temp.remoteAddr = ['/sys/userManage/roledel',{role:'liaoxia'}];
+                temp.data = '所有拥有该角色的用户权限都将失效,继续吗?';
+                temp.footerName = '确定';
+                this.$refs.modelDelete.loadFatherData(temp);
             },
-            showUserPlatAccess(val){
-                this.$Modal.info({
-                    title: val.userName + '可以操作的平台',
-                    content: val.platAndChannel.join(' , '),
-                })
+
+            // 修改角色或者用户权限，
+            modifyRolePermission(acl,modifyObject){
+                this.$Notice.error({
+                    title:'通知对象为'+JSON.stringify(modifyObject),
+                    duration:0,
+                    desc:JSON.stringify(acl),
+                });
             },
+
+            /**
+             * User处理 ,
+             * -----------------------------------------------------------------------
+             * 用户角色分配按钮
+             */
             modifyUserRole(val){
-                alert('功能完善中');
+                let temp = {} ;
+                temp.isShow = true;
+                temp.title = '为用户选择角色';
+                temp.arr = val.userRole;
+                temp.userInfo = val.userName;
+                this.$refs.changeUserRole.loadFatherData(temp);
             },
-            showUserFinalAcl(val){
-                let arr = [] ;
-                for(let temp of val.finalPermission){
-                    for (let temp1 of temp.lists){
-                        arr.push({menu:temp.alias,subMenu:temp1})
-                    }
-                }
 
-                // 对话框表单格式
-                this.showRoleAclData.data.columns = [
-                    {title: '类目', key: 'alias', sortable: true,maxWidth:100,
-                        render: (h, params) => {
-                            return h('strong',{style:{color:'#2db7f5'}}, params.row.alias);
-                            }
-                        },
-                    {title: '子项目', key: 'lists',
-                        render: (h, params) => {
-                            return h('div', params.row.lists.join(' , '));
-                            }
-                        },
-                ];
-                this.showRoleAclData.data.data = val.finalPermission;
-                this.showRoleAclData.title = '查看'+val.userName+'最终权限';
-                this.showRoleAclData.footerName = '关闭查看';
-                this.showRoleAclData.isShow = true;
+            /**
+             * 提交确认修改用户角色
+             * @param arr
+             * @param userInfo
+             */
+            commitModify(arr,userInfo){
+                this.$Notice.error({
+                    title:'通知对象为'+JSON.stringify(userInfo),
+                    duration:0,
+                    desc:JSON.stringify(arr),
+                });
             },
-            // TODO 修改用户权限
-            modifyUserPermission(){
-
-            },
+            /**
+             * 修改用户密码
+             * @param userName
+             */
             modifyUserPasswd(userName){
                 this.$Modal.confirm({
                     title:userName+' 的新密码',
@@ -510,13 +451,37 @@
                     }
                 })
             },
-            deleteUser(val){
-                this.deleteRoleAclData.isShow = true;
-                this.deleteRoleAclData.title = '确定删除'+val+'吗?';
-                this.deleteRoleAclData.remoteAddr = ['/sys/userManage/userdel',{user:val}];
-                this.deleteRoleAclData.data = '所有项目的 ' + val + ' 用户都无法登录,确定吗?';
+
+            /**
+             * 显示用户可以操作的平台
+             */
+            showUserPlatAccess(val){
+                this.$Modal.info({
+                    title: val.userName + '可以操作的平台',
+                    content: val.platAndChannel.join(' , '),
+                })
             },
 
+
+            /**
+             * 删除用户按钮
+             * @param val
+             */
+            deleteUser(val){
+                let temp = {};
+                temp.isShow = true;
+                temp.title = '确定删除'+val+'吗?';
+                temp.remoteAddr = ['/sys/userManage/userdel',{user:val}];
+                temp.data = '所有项目的 ' + val + ' 用户都无法登录,确定吗?';
+                temp.footerName = '确定';
+                this.$refs.modelDelete.loadFatherData(temp);
+            },
+
+            /**
+             * 注册和提交
+             * -----------------------------------------------------------------------
+             * @param name
+             */
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {

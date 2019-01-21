@@ -4,14 +4,11 @@
           <template slot-scope="{ row }" slot="slot-menuController" >
               <strong>{{row.menu}}</strong>
           </template>
-          <template slot-scope="{ row ,index }" slot="slot-menuSub" >
+          <template slot-scope="{ index }" slot="slot-menuSub" >
               <CustomShowModify v-model="father.data[index].subMenu" ></CustomShowModify>
           </template>
 
       </Table>
-      <!--<div><div>物品分析</div><i-switch v-model="switch1"></i-switch></div>-->
-      {{father.data}}
-
   </div>
 
 </template>
@@ -42,27 +39,6 @@
                   switch1:true,
           }
         },
-        methods:{
-            test_store(){
-                this.$MyStore.reduceCode()
-                // this.$MyStore.state.code -- ;
-                // this.$store.commit('jianshao');
-            }
-        },
-        computed:{
-            testStroe(){
-                // return  this.$MyStore.reduceCode() ;
-                return  this.$MyStore.state.code ;
-                // return  this.$store.state.count ;
-            }
-        },
-        // mounted: function(){
-        //         this.$API.POST('/test/one/set',{data:111,data2:1231}).then(
-        //             (response) => {
-        //                 this.abc = response.data;
-        //             }
-        //         )
-        //     },
 	}
 </script>
 

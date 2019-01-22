@@ -35,13 +35,19 @@ axios.interceptors.response.use(function (response) {
         return response;
     }
 }, function (error) {
-    router.push('login');
-    Vue.prototype.$Notice.error({
-        title:'无法预知的错误',
-        desc:'抱歉！出现系统异常的访问, 请联系管理员',
-        duration:8,
-    });
-    return Promise.reject(error);
+    try {
+        Vue.prototype.$Notice.error({
+            title: '无法预知的错误',
+            desc: '抱歉！出现系统异常的访问, 请联系管理员',
+            duration: 8,
+        });
+        router.push('/login');
+        console.log('login');
+    }catch (error) {
+        console.log(error)
+    }finally{
+        return Promise.reject(error);
+    }
 }) ;
 
 const API = {

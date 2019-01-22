@@ -1,25 +1,30 @@
 <template>
     <div>
-        测试4
-        <modelAuthorize v-model="data"></modelAuthorize>
-        {{data}}
+        <Button @click="click">点击</Button>
+        <platChange ref="platChange"></platChange>
     </div>
 </template>
 
 <script>
 	export default {
 		name: "four",
+        components:{
+		    platChange:()=>import('@/components/system/changePlatChange'),
+        },
         data(){
 		    return {
-                data:[
-                    {menu:'充值分析',subMenu:[
-                            ['/data/game/payer','物品货币',false],
-                            ['/data/game/payer','商城分析',true],
-                            ['/data/game/money','回本分析',true],
-                        ]
-                    },
-                    {menu:'详细日志',subMenu:[['/data/log/daily','充值日志',true]]},
-                ],
+
+            }
+        },
+        methods:{
+		    click() {
+                this.$refs.platChange.isShow = true ;
+                this.$refs.platChange.title = '分配平台权限' ;
+                this.$API.POST('/sys/userProject/platChannelList',{user:'liaoxiaotao',porjects:'abc'}).then(({data})=>{
+                    // 拿到数据之后，加载组件显示新的数据，
+                    this.$refs.platChange.data = data ;
+                })
+
             }
         }
 	}

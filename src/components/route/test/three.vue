@@ -1,37 +1,42 @@
 <template>
-  <div>
-      <Row>
-    <CustomData @send_time="getSelectTime"></CustomData>
-      <!--<loading :show="loadShow"></loading>-->
-      {{datetime}}</Row>
-      <Button @click="buttonClick1">按钮{{values}}</Button>
-  </div>
-
+    <div>
+        <Modal v-model="isShow" width="80%" :closable="false"  stripe>
+            <p slot="header" style="color:#ed4014;text-align:center">
+                <Icon type="ios-information-circle"></Icon>
+                <span>{{title}}</span>
+            </p>
+            {{data}}
+            <div slot="footer" style="width:8%;margin-left: auto;" >
+                <Button type="error" long @click="commitModify">确定</Button>
+            </div>
+        </Modal>
+    </div>
 </template>
 
-
 <script>
-
     export default {
-        name: "three",
-        data() {
+        name: "changePlatChange",
+        data(){
             return {
-                test: 'router',
-                datetime: '',
-                values: "",
-                // loadShow:true,
+                title:'',
+                isShow:true,
+                data:{},
             }
         },
-        methods: {
-            getSelectTime(time) {
-                this.datetime = time;
-            }
-            ,
-            buttonClick1() {
-                this.values = 'liaoxiaotao';
-                console.log(this.values);
+        methods:{
+            loadFatherData(val){
+                this.isShow = true ;
+                this.data = val.data ;
+                this.title = val.title ;
+            },
+            commitModify(){
+                this.isShow = false;
             }
         }
+
     }
 </script>
 
+<style scoped>
+
+</style>

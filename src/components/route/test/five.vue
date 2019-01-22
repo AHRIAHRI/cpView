@@ -2,19 +2,14 @@
     <div>
         <Spin fix>
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-            <div>数据加载中...</div>
+            <div>Loading</div>
         </Spin>
     </div>
 </template>
 
 <script>
 	export default {
-		name: "loading",
-        data(){
-		    return {
-		        // show:true,
-            };
-        },
+		name: "five"
 	}
 </script>
 

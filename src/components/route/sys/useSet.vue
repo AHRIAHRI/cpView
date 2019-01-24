@@ -11,7 +11,7 @@
             </FormItem>
             <FormItem label="选择项目">
                 <Select v-model="formItem.selectProject" clearable style="width:200px">
-                    <Option v-for="item in projectList" :value="item.project" :key="item.project">{{item.name}}</Option>
+                    <Option v-for="item in projectList" :value="item.projectCode" :key="item.projectCode">{{item.projectName}}</Option>
                 </Select>
 
             </FormItem>

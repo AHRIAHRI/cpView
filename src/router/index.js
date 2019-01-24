@@ -11,7 +11,7 @@ const router = new Router({
     routes: [
         {path: '/login', name: 'login', component: Util.loadComponents('/login'),},
         {path: '/error', component:Util.loadComponents('/error')},
-        {path: '/', name: 'home',component: Util.loadComponents('/base/menu'),},
+        {path: '/', name: 'home',component: Util.loadComponents('/system/Menu'),},
         
         // 对于不存在的请求,跳转到主页,并且重新加载组件路由。
         {path: '*', redirect: '/' ,},

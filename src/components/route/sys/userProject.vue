@@ -2,9 +2,6 @@
 
     <div>
         <!--<div>大师才可以访问</div>-->
-        <div v-if="loading">
-            <Loading></Loading>
-        </div>
         <platChange ref="platChange" @commit="getCommit"></platChange>
         <Modal v-model="isShow" width="60%" :closable="false"  stripe>
             <p slot="header" style="color:#ed4014;text-align:center">
@@ -32,11 +29,10 @@
 
         <div  style="width: 80% ; margin: auto">
             <Table size="small" border :columns="projectData.columns" :data="projectData.data" >
-                <!--<template slot-scope="{ row,index}" slot="slot-showPlatChannel" >-->
-                    <!--&lt;!&ndash;<i-switch v-model="arr[index].owner" ></i-switch>&ndash;&gt;-->
-                    <!--<Button>{{projectData.data[index].owner}}</Button>-->
-                <!--</template>-->
             </Table>
+        </div>
+        <div v-if="loading">
+            <LoadingColour :size="80"></LoadingColour>
         </div>
     </div>
 </template>
@@ -76,7 +72,6 @@
                                     }
                                 },temp.join(',') ? temp.join(',') : '无任何项目');
                             }},
-                        // {,align: 'center',},
                         {title:'项目下有的平台/渠道权限',align:'center',
                             render: (h, params) => {
                                 let temp = [] ;
@@ -95,21 +90,7 @@
                             },
                     ],
                     data:[
-                        {user:'liaoxiaotao', projects:[
-                            {projectCode:'sjjy',projectName:'圣剑纪元',owner:false},
-                            {projectCode:'yhsy',projectName:'永恒圣域',owner:true},
-
-                            ]},
-                        {user:'liaoxiaotao2', projects:[
-                                {projectCode:'sjjy',projectName:'圣剑纪元',owner:false},
-                                {projectCode:'yhsy',projectName:'永恒圣域',owner:true},
-
-                            ]}
-
                     ],
-                },
-                platdata:{
-
                 },
             }
         },
@@ -133,12 +114,19 @@
             },
             commitModify(){
                 this.isShow = false;
-                this.$Notice.error({
-                    title:'通知对象为'+this.user,
-                    duration:0,
-                    desc:JSON.stringify(this.arr),
+                this.$API.POST('/sys/userProject/commitUserProject',{user:this.user,data:this.arr}).then(({data})=>{
+                    if(data.status){
+                        this.$Notice.success({title:'权限修改成功',});
+                    }else{
+                        this.$Notice.error({title:'未正确的修改',});
+                    }
                 });
 
+            },
+            createData(){
+                this.$API.POST('/sys/userProject/projectUserList').then(({data})=>{
+                    this.projectData.data = data;
+                })
             },
             getCommit(data,user){
 
@@ -151,6 +139,9 @@
             // TODO 用户管理接口 有用户拥有的项目,所有用户修改项目拥有的,
 
 
+        },
+        created: function(){
+            this.createData();
         }
 
 	}

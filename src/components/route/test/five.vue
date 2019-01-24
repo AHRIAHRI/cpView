@@ -1,10 +1,5 @@
 <template>
-    <div>
-        <Spin fix>
-            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-            <div>Loading</div>
-        </Spin>
-    </div>
+    <LoadingColour :size="100"></LoadingColour>
 </template>
 
 <script>

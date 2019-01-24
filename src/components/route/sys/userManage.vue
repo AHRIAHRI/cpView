@@ -1,9 +1,9 @@
 <template>
     <div>
         <!--<CustomModelShowTable  ref="modelShow" ></CustomModelShowTable>-->
-        <changeUserRole ref="changeUserRole" @commitModify="commitModify" ></changeUserRole>
+        <ChangeUserRole ref="changeUserRole" @commitModify="commitModify" ></ChangeUserRole>
         <CustomModelDelete  ref="modelDelete"  @sureDelData="deleteRole" ></CustomModelDelete>
-        <modelAuthorize ref="modifyAuthorize"  @commitModify="modifyRolePermission"></modelAuthorize>
+        <ModelAuthorize ref="modifyAuthorize"  @commitModify="modifyRolePermission"></ModelAuthorize>
         <Collapse simple v-model="defaultPanel"  accordion>
             <Panel name="1">
                 添加 / 删除 / 修改 角色
@@ -48,9 +48,6 @@
                                 <Select v-model="formCustom.selectRole" multiple>
                                     <Option v-for="item in allRoles" :value="item.value" :key="item.value">{{ item.alias }} - [ {{item.value}} ]</Option>
                                 </Select>
-                            </FormItem>
-                            <FormItem label="平台/渠道" prop="platChannel">
-                                <Cascader :data="platChannelData" change-on-select v-model="formCustom.platChannel"></Cascader>
                             </FormItem>
                             <FormItem>
                                 <Button type="success" @click="handleSubmit('formCustom')" style="width: 70%;margin-right: 9%" >添加</Button>
@@ -233,16 +230,6 @@
                     columns:[
                         { title: '角色', key: 'roleName',align: 'center'},
                         { title: '中文名', key: 'alias',align: 'center'},
-                        // { title: '所有权限', key: 'showAcl',align: 'center',
-                        //     render: (h, params) => {
-                        //         return h('Icon', {
-                        //             props: {type:'md-eye',size:24,},
-                        //             on: {
-                        //                 click: () => {this.showRoleAcl(params.row.showAcl)}
-                        //             }
-                        //         }, '点击查看');
-                        //         }
-                        //     },
                         { title: '查看/修改权限', key: 'modifyAcl',align: 'center',
                             render: (h, params) => {
                                 return h('Icon', {
@@ -265,27 +252,6 @@
                     ],
 
                 },
-                allPermisssion:['所有的权限'],
-
-                platChannelData:[
-                    {
-                        value: 'beijing',
-                        label: '北京',
-                        children: [
-                            {
-                                value: 'gugong',
-                                label: '故宫'
-                            },
-                            {
-                                value: 'tiantan',
-                                label: '天坛'
-                            },
-                            {
-                                value: 'wangfujing',
-                                label: '王府井'
-                            }
-                        ]
-                    }],
                 allRoles:[
                     {value:'kefu',alias:'客服'},
                     {value:'admin',alias:'管理员'},

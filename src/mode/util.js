@@ -78,7 +78,7 @@ const Util =
         for(let addr of addrs){
             result.push({path:addr,
                 components:{
-                    main:this.loadComponents('/base/menu'),
+                    main:this.loadComponents('/system/Menu'),
                     default:this.loadComponents('/route'+addr)
                 }
             })

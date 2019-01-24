@@ -7,7 +7,7 @@
             </p>
                 <Table border :columns="table1.columns" :data="table1.data">
                     <template slot-scope="{ row }" slot="project">
-                        <strong>{{ row.alias }}</strong>
+                        <strong>{{ row.projectName }}</strong>
                     </template>
                     <template slot-scope="{ index }" slot="plat">
                         <platAndChannel v-model="table1.data[index].plat"></platAndChannel>

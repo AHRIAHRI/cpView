@@ -143,23 +143,23 @@
                             tel:1231231231,
                             platAndChannel:['融合/爱奇艺','所有'],
                             userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
-                            lastLogin:'1991-12-12 12:12:12',
-                            lastLoginAddr:'192.138.1.1/召唤师峡谷',
+                            // lastLogin:'1991-12-12 12:12:12',
+                            // lastLoginAddr:'192.138.1.1/召唤师峡谷',
                         },
                         {
                             userName:'jjjjjjj',
                             tel:12312312312,
                             platAndChannel:['融合/华为','所有'],
                             userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
-                            lastLogin:'1991-12-12 12:12:12',
-                            lastLoginAddr:'192.138.1.1/召唤师峡谷',
+                            // lastLogin:'1991-12-12 12:12:12',
+                            // lastLoginAddr:'192.138.1.1/召唤师峡谷',
                         },
                     ],
                     columns:[
                         { title: '用户名', key: 'userName',align: 'center'},
                         { title: '电话', key: 'tel',align: 'center'},
-                        { title: '上一次登录时间', key: 'lastLogin',align: 'center',minWidth:120},
-                        { title: '上一次登录地址', key: 'lastLoginAddr',align: 'center',minWidth:120},
+                        // { title: '上一次登录时间', key: 'lastLogin',align: 'center',minWidth:120},
+                        // { title: '上一次登录地址', key: 'lastLoginAddr',align: 'center',minWidth:120},
                         { title: '角色分配',align: 'center',
                             render: (h, params) => {
                                 // 遍历出存在的uese列表，
@@ -214,7 +214,7 @@
                     data:[
                         {
                         roleName:'admin',
-                        alias:'管理员',
+                        roleAlias:'管理员',
                         // 列出角色所有的权限,
                         modifyAcl:[
                             {menu:'充值分析',subMenu:[
@@ -229,7 +229,7 @@
                     ],
                     columns:[
                         { title: '角色', key: 'roleName',align: 'center'},
-                        { title: '中文名', key: 'alias',align: 'center'},
+                        { title: '中文名', key: 'roleAlias',align: 'center'},
                         { title: '查看/修改权限', key: 'modifyAcl',align: 'center',
                             render: (h, params) => {
                                 return h('Icon', {
@@ -475,15 +475,18 @@
                 this.$refs[name].resetFields();
             },
             roleAddSubmit(role){
-                this.$API.POST('/sys/userManage/roleadd').then(({data})=>{
-                    // 处理逻辑
+                this.$API.POST('/sys/userManage/roleadd',this.roleAdd).then(({data})=>{
+                    if(data.status){
+                        this.$Message.success('角色添加成功');
+                    }else{
+                        this.$Message.error('角色添加失败 '+data.mesg);
+                    }
                 });
             },
             getData(){
                 this.$API.POST('/sys/userManage/roleUserInfo').then(({data})=>{
                         this.role.data = data.roleList ;               // 角色列表，包含角色的具体信息,提供权限是否选择的键值对。
                         this.user.data = data.userList ;               // 用户列表，包含用户的具体信息,
-                        this.platChannelData = data.platChannelData ;  // 创建用户的时候提供选择的平台和渠道
                 });
             }
         },

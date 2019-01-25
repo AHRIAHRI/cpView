@@ -1,10 +1,13 @@
 <template>
   <div >
       <div style="width: 60%;">
-      <Divider orientation="left">项目:<i style="color: #19be6b">{{projectName}}</i><Divider type="vertical" />你好,<i style="color: #19be6b">{{username}}</i><Divider type="vertical" /><i @click="logout" style="color:#c5c8ce ">点击退出登录</i></Divider>
+      <Divider orientation="left">项目:
+          <router-link :to="{ path: '/sys/useSet'}">
+          {{this.$store.state.selectProjectName}}({{this.$store.state.selectProject}})
+          </router-link><Divider type="vertical" />你好,{{this.$store.state.userName}}<Divider type="vertical" /><i @click="logout" style="color:#c5c8ce ">点击退出登录</i></Divider>
       </div>
     <Menu :mode="styleMode" theme="light" active-name="1">
-      <Submenu v-for="(nav,key1) in menuList" :name="nav.name" :key="key1">
+      <Submenu v-for="(nav,key1) in this.$store.state.menu" :name="nav.name" :key="key1">
         <template slot="title">
           <Icon :type="nav.icon" />
           {{nav.alias}}
@@ -41,9 +44,11 @@ export default {
     },
     // TODO 如果检测token过期，则跳转到登录页面
     created:function () {
+        // console.log('aaaaaaaaaaaaaaaaaaaa');
+        this.$Util.reloadUserInfo();
         this.$router.addRoutes(this.$Util.generateRouteComponents());
-        this.projectName = this.$Util.getStorage('project') || '没有选择一个项目';
-        this.username = '游客';
+        // this.projectName =  this.$store.state.selectProject || '没有选择一个项目'; // 冲vuex中取数据
+        // this.username = this.$store.state.userName;
         this.menuList = this.$store.state.menu ;
     }
 }

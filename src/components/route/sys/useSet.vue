@@ -50,15 +50,20 @@
 		    // TODO 验证通过之后进行体提交
             userModifySubmit(formItem){
                 this.$API.POST('/sys/useSet/changeInfo',this.formItem).then(({data})=>{
-                    console.log(data);
-                    if('success' === data ){
-                        this.$Notice.success({title:'用户信息修改成功'});
-                        // TODO 强制退出刷新 把选择项目写入缓存
-                    }else{
-                        this.$Notice.success({title:'用户信息修改异常'+ JSON.stringify(data)});
-                    }
-                }).then((response) => {this.$Message.error('异常的请求' + response.status)})
+                    data.passwdStatus ? this.$Notice.success({title:'用户密码修改成功'}) : '';
+                    data.selectProjectStatus ? this.$Notice.success({title:'选择项目信息修改成功'}) : '' ;
+                    data.telStatus ? this.$Notice.success({title:'电话信息成功'}) : '' ;
+                    // 修改成功的话 把新的选着写入 localStorage ,
+                    if(data.selectProjectStatus){
+                        for (let item of this.projectList)
+                        if(item.projectCode === this.formItem.selectProject){
+                            this.$Util.setStorage({selectProject:item.projectCode,selectProjectName:item.projectName});
+                            this.$Util.reloadUserInfo();
+                            // 写入localStroage之后，重新加载vuex
 
+                        }
+                    }
+                })
             }
         }
 	}

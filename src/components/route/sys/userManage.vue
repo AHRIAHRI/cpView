@@ -138,22 +138,22 @@
                 // 请求需要加载的数据,
                 user:{
                     data:[
-                        {
-                            userName:'liaoxiaotao',
-                            tel:1231231231,
-                            platAndChannel:['融合/爱奇艺','所有'],
-                            userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
-                            // lastLogin:'1991-12-12 12:12:12',
-                            // lastLoginAddr:'192.138.1.1/召唤师峡谷',
-                        },
-                        {
-                            userName:'jjjjjjj',
-                            tel:12312312312,
-                            platAndChannel:['融合/华为','所有'],
-                            userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
-                            // lastLogin:'1991-12-12 12:12:12',
-                            // lastLoginAddr:'192.138.1.1/召唤师峡谷',
-                        },
+                        // {
+                        //     userName:'liaoxiaotao',
+                        //     tel:1231231231,
+                        //     platAndChannel:['融合/爱奇艺','所有'],
+                        //     userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
+                        //     // lastLogin:'1991-12-12 12:12:12',
+                        //     // lastLoginAddr:'192.138.1.1/召唤师峡谷',
+                        // },
+                        // {
+                        //     userName:'jjjjjjj',
+                        //     tel:12312312312,
+                        //     platAndChannel:['融合/华为','所有'],
+                        //     userRole:[{role:'admin',status:true,roleName:'管理员'},{role:'kefu',status:true,roleName:'客服'}],
+                        //     // lastLogin:'1991-12-12 12:12:12',
+                        //     // lastLoginAddr:'192.138.1.1/召唤师峡谷',
+                        // },
                     ],
                     columns:[
                         { title: '用户名', key: 'userName',align: 'center'},
@@ -212,20 +212,20 @@
                 },
                 role:{
                     data:[
-                        {
-                        roleName:'admin',
-                        roleAlias:'管理员',
-                        // 列出角色所有的权限,
-                        modifyAcl:[
-                            {menu:'充值分析',subMenu:[
-                                    ['/data/game/payer','物品货币',false],
-                                    ['/data/game/payer','商城分析',true],
-                                    ['/data/game/money','回本分析',true],
-                                ]
-                            },
-                            {menu:'详细日志',subMenu:[['/data/log/daily','充值日志',true]]},
-                            ],
-                        },
+                        // {
+                        // roleName:'admin',
+                        // roleAlias:'管理员',
+                        // // 列出角色所有的权限,
+                        // modifyAcl:[
+                        //     {menu:'充值分析',subMenu:[
+                        //             ['/data/game/payer','物品货币',false],
+                        //             ['/data/game/payer','商城分析',true],
+                        //             ['/data/game/money','回本分析',true],
+                        //         ]
+                        //     },
+                        //     {menu:'详细日志',subMenu:[['/data/log/daily','充值日志',true]]},
+                        //     ],
+                        // },
                     ],
                     columns:[
                         { title: '角色', key: 'roleName',align: 'center'},
@@ -319,7 +319,7 @@
             modifyRoleAcl(val){
                 let temp = {}  ;
                 temp.title = '修改的权限将影响所有拥有该角色的用户!';
-                temp.other = {role:val.roleName};
+                temp.other = val.roleName;
                 temp.arr = val.modifyAcl ;
                 this.$refs.modifyAuthorize.loadFatherData(temp);
             },
@@ -335,12 +335,17 @@
             },
 
             // 修改角色或者用户权限，
-            modifyRolePermission(acl,modifyObject){
-                this.$Notice.error({
-                    title:'通知对象为'+JSON.stringify(modifyObject),
-                    duration:0,
-                    desc:JSON.stringify(acl),
-                });
+            modifyRolePermission(acl,role){
+                this.$API.POST('/sys/userManage/modifyRolePermission',{role:role,newAcl:acl}).then(({data})=>{
+                    if(data){
+                        this.getData(); //操作成功之后重新刷新数据
+                        this.$Notice.success({title:'操作成功',});
+                    }else {
+                        this.$Notice.error({title:'操作异常',});
+                    }
+                    }
+                );
+
             },
 
             /**
@@ -477,6 +482,7 @@
             roleAddSubmit(role){
                 this.$API.POST('/sys/userManage/roleadd',this.roleAdd).then(({data})=>{
                     if(data.status){
+                        this.getData();
                         this.$Message.success('角色添加成功');
                     }else{
                         this.$Message.error('角色添加失败 '+data.mesg);
@@ -492,7 +498,9 @@
         },
         computed:{},
         mounted:function(){},
-        created:function(){},
+        created:function(){
+		    this.getData();
+        },
 	}
 </script>
 

@@ -4,7 +4,7 @@
         <ChangeUserRole ref="changeUserRole" @commitModify="commitModify" ></ChangeUserRole>
         <CustomModelDelete  ref="modelDelete"  @sureDelData="deleteRole" ></CustomModelDelete>
         <ModelAuthorize ref="modifyAuthorize"  @commitModify="modifyRolePermission"></ModelAuthorize>
-        <Collapse simple v-model="defaultPanel"  accordion>
+        <Collapse simple v-model="defaultPanel" >
             <Panel name="1">
                 添加 / 删除 / 修改 角色
                 <div slot="content"  >
@@ -43,11 +43,6 @@
                             </FormItem>
                             <FormItem label="Tel" prop="tel">
                                 <Input type="text" v-model="formCustom.tel" number placeholder="138xxxxxxxx"></Input>
-                            </FormItem>
-                            <FormItem label="角色" prop="selectRole">
-                                <Select v-model="formCustom.selectRole" multiple>
-                                    <Option v-for="item in allRoles" :value="item.value" :key="item.value">{{ item.alias }} - [ {{item.value}} ]</Option>
-                                </Select>
                             </FormItem>
                             <FormItem>
                                 <Button type="success" @click="handleSubmit('formCustom')" style="width: 70%;margin-right: 9%" >添加</Button>
@@ -177,6 +172,18 @@
                                 }, temp.join(',') ? temp.join(',') : '无角色权限' );
                             }
                         },
+                        // TODO 这种辅助性质的功能后期完善
+                        { title: '菜单权限', key: 'abc',align: 'center',
+                            render: (h, params) => {
+                                return h('Icon', {
+                                    props: {type:'ios-eye-outline',size:24,},
+                                    on: {
+                                        // click: () => {this.showUserPlatAccess(params.row)}
+                                    }
+                                }, '点击查看');
+                            }
+                        },
+
                         { title: '平台权限', key: 'abc',align: 'center',
                             render: (h, params) => {
                                 return h('Icon', {
@@ -258,7 +265,7 @@
                     {value:'yinyun',alias:'营运'},
                 ],
 
-                defaultPanel:[2],
+                defaultPanel:[1,2],
                 allowcommit:false,
                 formCustom: {
                     passwd: '',
@@ -359,6 +366,7 @@
                 temp.title = '为用户选择角色';
                 temp.arr = val.userRole;
                 temp.userInfo = val.userName;
+                // TODO 监控数据变化,如果数据有变化,就发送请求。因为遮罩层也可以关闭，不点确定就不发送请求,实际上也显示了
                 this.$refs.changeUserRole.loadFatherData(temp);
             },
 
@@ -367,12 +375,18 @@
              * @param arr
              * @param userInfo
              */
-            commitModify(arr,userInfo){
-                this.$Notice.error({
-                    title:'通知对象为'+JSON.stringify(userInfo),
-                    duration:0,
-                    desc:JSON.stringify(arr),
+            commitModify(roleSelectInfo,user){
+                this.$API.POST('/sys/userManage/modifyUserOwnerRoles',{select:roleSelectInfo,user:user}).then(({data})=>
+                {
+                    if(data.status){
+                        this.getData();
+                        this.$Notice.success({title:'操作成功'});
+                    }else {
+                        this.$Notice.error({title:'操作失败'});
+                    }
+
                 });
+
             },
             /**
              * 修改用户密码
@@ -459,17 +473,12 @@
                         // this.$Message.success('');
                         this.$API.POST('/sys/userManage/useradd',this.formCustom).then(({data}) => {
                             if(data === 'success'){
-                                this.$Message.success('添加用户成功');
-                                // TODO 刷新数据
-
-                                // 登录成功之后刷新数据
+                                this.$Message.success('添加用户成功,请继续为用户分配项目和授权');
                                 this.$refs[name].resetFields();
                             }else{
                                 this.$Message.error('添加用户失败'+ data )
                             }
-                        }).then((response) =>{
-                            this.$Message.error('异常的请求' + response.status);}
-                        )
+                        })
                     } else {
                         // console.log(valid);
                         this.$Message.error('提交被拒绝, 请正确填写格式');
@@ -493,6 +502,7 @@
                 this.$API.POST('/sys/userManage/roleUserInfo').then(({data})=>{
                         this.role.data = data.roleList ;               // 角色列表，包含角色的具体信息,提供权限是否选择的键值对。
                         this.user.data = data.userList ;               // 用户列表，包含用户的具体信息,
+                        this.$Message.info('数据刷新/加载');
                 });
             }
         },

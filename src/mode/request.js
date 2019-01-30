@@ -25,24 +25,52 @@ axios.interceptors.request.use(
  * 添加一个响应拦截器
  */
 axios.interceptors.response.use(function (response) {
-    if(response.data === 'permissionIsNotDefined'){
-        // this.$Modal.error({
-        Vue.prototype.$Modal.error({
-            title: '抱歉! 权限不足',
-            content: '请联系管理员',
-        });
-    }else{
+    // if(response.data === 'permissionIsNotDefined'){
+    //     // this.$Modal.error({
+    //     Vue.prototype.$Modal.error({
+    //         title: '抱歉! 权限不足',
+    //         content: '请联系管理员',
+    //     });
+    // }else{
         return response;
-    }
+    // }
 }, function (error) {
     try {
-        Vue.prototype.$Notice.error({
-            title: '无法预知的错误',
-            desc: '抱歉！出现系统异常的访问, 请联系管理员',
-            duration: 8,
-        });
-        router.push('/login');
-        console.log('login');
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            if(401 === error.response.status) {
+                Vue.prototype.$Notice.error({
+                    title: '授权失败',
+                    desc: '您没有权限继续访问！',
+                    duration: 8,
+                });
+            }else {
+                Vue.prototype.$Notice.error({
+                    title: '服务器状态码:' + error.response.status,
+                    desc: '服务器返回了一个错误:' + error.response.data,
+                    duration: 8,
+                })
+            }
+            console.log('error.response.data :' + error.response.data);
+            console.log('error.response.status :' + error.response.status);
+            console.log('error.response.headers :' , error.response.headers);
+        // } else if (error.request) {
+        //     // The request was made but no response was received
+        //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        //     // http.ClientRequest in node.js
+        //     console.log('error.request :' + error.request);
+        } else {
+            Vue.prototype.$Notice.error({
+                title: '无法预料的错误',
+                desc: '抱歉！这是一个无法预知的错误',
+                duration: 8,
+            });
+            
+            // Something happened in setting up the request that triggered an Error
+            console.log('error.message :', error.message);
+        }
+        console.log('error.config :',error.config);
     }catch (error) {
         console.log(error)
     }finally{

@@ -10,7 +10,14 @@ const router = new Router({
     // mode:'history',
     routes: [
         {path: '/login', name: 'login', component: Util.loadComponents('/login'),},
-        {path: '/error', component:Util.loadComponents('/error')},
+        
+        {path: '/userSet',name: 'userSet', components:{
+                main:Util.loadComponents('/system/Menu'),
+                default:Util.loadComponents('/system/userSet'),
+            }
+            
+            },
+        {path: '/notPermission',name:'notPermission',component:Util.loadComponents('/notPermission')},
         {path: '/', name: 'home',component: Util.loadComponents('/system/Menu'),},
         
         // 对于不存在的请求,跳转到主页,并且重新加载组件路由。
@@ -20,7 +27,7 @@ const router = new Router({
 
 // 对所有的路由进行检查和统一分配 , 如果验证没通过则返回登录界面
 router.beforeResolve((to,from,next)=>{
-    if(to.name !== 'login' && ! Util.checkLogin() ) {
+    if(to.name !== 'login' && ! Util.checkLogin()) {
         if(to.name !== 'home') {
             Vue.prototype.$Notice.error({
                 title: '请先登录',

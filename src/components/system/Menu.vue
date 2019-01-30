@@ -2,7 +2,7 @@
   <div >
       <div style="width: 60%;">
       <Divider orientation="left">项目:
-          <router-link :to="{ path: '/sys/useSet'}">
+          <router-link :to="{ name: 'userSet'}">
           {{this.$store.state.selectProjectName}}({{this.$store.state.selectProject}})
           </router-link><Divider type="vertical" />你好,{{this.$store.state.userName}}<Divider type="vertical" /><i @click="logout" style="color:#c5c8ce ">点击退出登录</i></Divider>
       </div>
@@ -44,12 +44,26 @@ export default {
     },
     // TODO 如果检测token过期，则跳转到登录页面
     created:function () {
-        // console.log('aaaaaaaaaaaaaaaaaaaa');
         this.$Util.reloadUserInfo();
-        this.$router.addRoutes(this.$Util.generateRouteComponents());
-        // this.projectName =  this.$store.state.selectProject || '没有选择一个项目'; // 冲vuex中取数据
-        // this.username = this.$store.state.userName;
-        this.menuList = this.$store.state.menu ;
+        if(0 === this.$store.state.menu.length){
+            // 如果没有菜单栏信息,提示用户没有任何权限
+            // this.$router.push('/notPermission');
+            // this.$router()
+            this.$Notice.error({
+                title: '您没有任何权限',
+                desc: '请选择一个项目或者,请联系管理员授权之后，再刷新页面。',
+                duration: 0,
+            });
+        }else{
+            // console.log('aaaaaaaaaaaaaaaaaaaa');
+
+            this.$router.addRoutes(this.$Util.generateRouteComponents());
+            // this.projectName =  this.$store.state.selectProject || '没有选择一个项目'; // 冲vuex中取数据
+            // this.username = this.$store.state.userName;
+            this.menuList = this.$store.state.menu;
+        }
+    },
+    mounted:function () {
     }
 }
 </script>

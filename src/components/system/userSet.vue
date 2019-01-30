@@ -6,15 +6,17 @@
             </Divider>
 
         <Form ref="formItem" :model="formItem"  style="width:300px ; margin: auto" :label-width="80"  >
-            <FormItem label="手机号码">
-                <Input v-model="formItem.tel" clearable placeholder="按需修改你的手机号码"></Input>
-            </FormItem>
             <FormItem label="选择项目">
                 <Select v-model="formItem.selectProject" clearable style="width:200px">
                     <Option v-for="item in projectList" :value="item.projectCode" :key="item.projectCode">{{item.projectName}}</Option>
                 </Select>
-
             </FormItem>
+            <Divider orientation="left">修改基础登录信息
+            </Divider>
+            <FormItem label="手机号码">
+                <Input v-model="formItem.tel" clearable placeholder="按需修改你的手机号码"></Input>
+            </FormItem>
+
             <FormItem label="新的密码">
                 <Input type="password" v-model="formItem.passwd" clearable placeholder="按需修改你的密码"></Input>
             </FormItem>
@@ -24,7 +26,10 @@
         </Form>
         <Divider orientation="left">
         </Divider>
-{{formItem}}
+<!--{{formItem}}-->
+        <div v-if="master">
+            是否为master,如果是master 提供项目授权功能呢
+        </div>
     </div>
 </template>
 
@@ -37,14 +42,16 @@
                     tel:'',
                     selectProject:'',
                     passwd:'',
+                    master:false,
                 },
                 projectList:[]
             }
         },
         created:function () {
 		    this.$API.POST('/sys/useSet/userInfoList').then(({data}) => {
-		            this.projectList = data.projectList;
-            })
+                this.projectList = data.projectList;
+            });
+
         },
         methods:{
 		    // TODO 验证通过之后进行体提交
@@ -52,19 +59,31 @@
                 this.$API.POST('/sys/useSet/changeInfo',this.formItem).then(({data})=>{
                     data.passwdStatus ? this.$Notice.success({title:'用户密码修改成功'}) : '';
                     data.selectProjectStatus ? this.$Notice.success({title:'选择项目信息修改成功'}) : '' ;
-                    data.telStatus ? this.$Notice.success({title:'电话信息成功'}) : '' ;
+                    data.telStatus ? this.$Notice.success({title:'电话信息修改成功'}) : '' ;
                     // 修改成功的话 把新的选着写入 localStorage ,
                     if(data.selectProjectStatus){
-                        for (let item of this.projectList)
-                        if(item.projectCode === this.formItem.selectProject){
-                            this.$Util.setStorage({selectProject:item.projectCode,selectProjectName:item.projectName});
-                            this.$Util.reloadUserInfo();
-                            // 写入localStroage之后，重新加载vuex
-
+                        // 从本地的选择判断，新选择的项目，因为是请求成功之后的回调，所以数据是一样的.
+                        for (let item of this.projectList) {
+                            if (item.projectCode === this.formItem.selectProject) {
+                                this.$Util.setStorage({
+                                    selectProject: item.projectCode,
+                                    selectProjectName: item.projectName
+                                });
+                                // 写入localStroage之后，重新加载vuex
+                                // this.$Util.reloadUserInfo();
+                            }
                         }
+                        this.$Util.windowsReload();
                     }
                 })
-            }
+            },
+            masterData(){
+                // TODO  页面整合到一起
+                this.$API.POST('/sys/useSet/isMaster').then(({data})=>{
+                    this.master = data.isMaster;    // 是否为master
+                    this.projectUserList = data.projectUserList;  // 如果是继续返回授权列表
+                })
+            },
         }
 	}
 </script>

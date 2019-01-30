@@ -98,25 +98,25 @@ const Util =
                     main:this.loadComponents('/system/Menu'),
                     default:this.loadComponents('/route'+addr),
                 },
-                beforeEnter: (to, from, next)=>{
-                    // 检查vuex否有基础的信息 选择的项目 等
-                    // 如果没有,判断localStorage中有没有，如果依然没有，则跳转到noselect 页面
-                    // TODO 还没有测试
-                    if(to.path === '/sys/useSet') {
-                        next();
-                    }else {
-                        if(!store.state.selectProject){
-                            if(!this.getStorage('selectProject')){
-                                this.$router.push('/sys/useSet')
-                            }else{
-                                this.reloadUserInfo();
-                                next()
-                            }
-                        }else {
-                            next()
-                        }
-                    }
-                }
+                // beforeEnter: (to, from, next)=>{
+                //     // 检查vuex否有基础的信息 选择的项目 等
+                //     // 如果没有,判断localStorage中有没有，如果依然没有，则跳转到noselect 页面
+                //     // TODO 还没有测试
+                //     if(to.path === '/sys/useSet') {
+                //         next();
+                //     }else {
+                //         if(!store.state.selectProject){
+                //             if(!this.getStorage('selectProject')){
+                //                 this.$router.push('/sys/useSet')
+                //             }else{
+                //                 this.reloadUserInfo();
+                //                 next()
+                //             }
+                //         }else {
+                //             next()
+                //         }
+                //     }
+                // }
             })
           }
         return result;

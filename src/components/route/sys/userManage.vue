@@ -21,7 +21,7 @@
                         </FormItem>
                     </Form>
                     <!--<Divider style="width: 80% ; margin: auto"></Divider>-->
-                    <div  style="width: 40% ; margin: auto">
+                    <div  style="width: 80% ; margin: auto">
                         <Table size="small" border :columns="role.columns" :data="role.data" ></Table>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         </Form>
                     </div>
 
-                    <div style="width: 90% ; margin: auto">
+                    <div style="width: 80% ; margin: auto">
                             <Table size="small"  :columns="user.columns" :data="user.data" ></Table>
                     </div>
                 </div>
@@ -265,7 +265,7 @@
                     {value:'yinyun',alias:'营运'},
                 ],
 
-                defaultPanel:[1,2],
+                defaultPanel:[2],
                 allowcommit:false,
                 formCustom: {
                     passwd: '',

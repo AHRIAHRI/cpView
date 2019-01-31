@@ -38,6 +38,7 @@
                 title:'',
                 isShow:false,
                 user:'',
+                desc:"如果未空，则代表拥有平台下所有权限。否则继续往下判断，(如果遇到未true的则代表有这个平台权限)",
                 table1:{
                     columns:[
                         {title:'项目',slot:'project',maxWidth:100,align:'center'},

@@ -1,6 +1,25 @@
 <template>
     <div style="width: 50% ;margin: auto">
+        <Modal v-model="isShow" width="60%" :closable="false"  stripe>
+            <p slot="header" style="color:#ed4014;text-align:center">
+                <Icon type="ios-information-circle"></Icon>
+                <span>{{title}}</span>
+            </p>
+            <div style="width:80%;margin:auto" >
+                <Table :columns="columns" border :data="arr" :disabled-hover="true">
+                    <template slot-scope="{ row}" slot="slot-menuController" >
+                        <strong>{{row.projectName}}</strong>
+                    </template>
+                    <template slot-scope="{ index }" slot="slot-menuSub" >
+                        <i-switch v-model="arr[index].owner" ></i-switch>
+                    </template>
 
+                </Table>
+            </div>
+            <div slot="footer" style="width:8%;margin-left: auto;" >
+                <Button type="error" long @click="commitModify">确定</Button>
+            </div>
+        </Modal>
             <Divider orientation="left">
             <i style="color: #e41028;">修改你的信息</i>
             </Divider>
@@ -28,7 +47,10 @@
         </Divider>
 <!--{{formItem}}-->
         <div v-if="master">
-            是否为master,如果是master 提供项目授权功能呢
+            <div  style="width: 80% ; margin: auto">
+                <Table size="small" border :columns="projectData.columns" :data="projectData.data" >
+                </Table>
+            </div>
         </div>
     </div>
 </template>
@@ -42,12 +64,60 @@
                     tel:'',
                     selectProject:'',
                     passwd:'',
-                    master:false,
+                    master:true,
                 },
-                projectList:[]
+                title:'',
+                columns:[
+                    {slot:"slot-menuController",maxWidth:200,align:'center'},
+                    {slot:"slot-menuSub",align:'center', },
+
+                ],
+                arr:[],
+                isShow:false,
+                master:false,
+                projectList:[],
+                projectData:{
+                    columns:[
+                        {title:'用户', key:'user',align: 'center',maxWidth:300},
+                        {title:'拥有项目权限',align: 'center',minWidth:200,
+                            render: (h, params) => {
+                                let temp = [] ;
+                                for (let item of params.row.projects){
+                                    if(item.owner){
+                                        temp.push(item.projectName+'('+item.projectCode+')');
+                                    }
+                                }
+                                return h('div', {
+                                    props: {type:'ios-cog-outline',size:30},
+                                    on: {
+                                        click: () => {this.modifyUserAffiliation(params.row)}
+                                    }
+                                },temp.join(',') ? temp.join(',') : '无任何项目');
+                            }},
+                        // {title:'项目下有的平台/渠道权限',align:'center',
+                        //     render: (h, params) => {
+                        //         let temp = [] ;
+                        //         for (let item of params.row.projects){
+                        //             if(item.owner){
+                        //                 temp.push(item.projectName);
+                        //             }
+                        //         }
+                        //         return h('div', {
+                        //             props: {type:'ios-cog-outline',size:30},
+                        //             on: {
+                        //                 click: () => {this.showUserPlatChannel(params.row.user)}
+                        //             }
+                        //         },temp.join(',') ? '默认为所有' : '先选择一个项目');
+                        //     }
+                        // },
+                    ],
+                    data:[
+                    ],
+                },
             }
         },
         created:function () {
+		    this.masterData();
 		    this.$API.POST('/sys/useSet/userInfoList').then(({data}) => {
                 this.projectList = data.projectList;
             });
@@ -55,6 +125,24 @@
         },
         methods:{
 		    // TODO 验证通过之后进行体提交
+            modifyUserAffiliation(val){
+                this.title = '给用户 [ '+val.user+' ] 项目授权';
+                this.isShow = true;
+                this.user = val.user;
+                this.arr = val.projects;
+            },
+            commitModify(){
+                this.isShow = false;
+                this.$API.POST('/sys/userProject/commitUserProject',{user:this.user,data:this.arr}).then(({data})=>{
+                    if(data.status){
+                        this.$Notice.success({title:'权限修改成功',});
+                    }else{
+                        this.$Notice.error({title:'未正确的修改',});
+                    }
+                });
+
+            },
+
             userModifySubmit(formItem){
                 this.$API.POST('/sys/useSet/changeInfo',this.formItem).then(({data})=>{
                     data.passwdStatus ? this.$Notice.success({title:'用户密码修改成功'}) : '';
@@ -69,8 +157,6 @@
                                     selectProject: item.projectCode,
                                     selectProjectName: item.projectName
                                 });
-                                // 写入localStroage之后，重新加载vuex
-                                // this.$Util.reloadUserInfo();
                             }
                         }
                         this.$Util.windowsReload();
@@ -81,7 +167,7 @@
                 // TODO  页面整合到一起
                 this.$API.POST('/sys/useSet/isMaster').then(({data})=>{
                     this.master = data.isMaster;    // 是否为master
-                    this.projectUserList = data.projectUserList;  // 如果是继续返回授权列表
+                    this.projectData.data = data.masterData;  // 如果是继续返回授权列表
                 })
             },
         }

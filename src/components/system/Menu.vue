@@ -50,8 +50,8 @@ export default {
             // this.$router.push('/notPermission');
             // this.$router()
             this.$Notice.error({
-                title: '您没有任何权限',
-                desc: '请选择一个项目或者,请联系管理员授权之后，再刷新页面。',
+                title: '在这个项目下,您没有任何权限',
+                desc: '请联系管理员授权之后，再刷新页面。',
                 duration: 0,
             });
         }else{

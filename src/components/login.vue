@@ -28,16 +28,17 @@
                     if(resp.status === 200 && resp.headers.authorization ){
 
                         // 保存TOKEN
-                        this.$Util.setStorage({token:resp.headers.authorization});
+                        this.$Util.setStorage({token:resp.headers.authorization,userName:user,});
                         //  这里还要存用户名，用户选着的项目,如果没有选的项目，强行到一个页面，
+                        // TODO bug 一个如果没有选一个项目，也应该保存用户名
                         if(resp.data.selectProject){
-                            this.$Util.setStorage({userName:user,selectProject:resp.data.selectProject,selectProjectName:resp.data.selectProjectName});
+                            this.$Util.setStorage({selectProject:resp.data.selectProject,selectProjectName:resp.data.selectProjectName});
                             // 加载到本地之后，还需要加载到vuex中
-                            this.$Util.reloadUserInfo();
                             this.$router.push('/');
                         }else{
                             this.$router.push('/noPorject');
                         }
+                        this.$Util.reloadUserInfo();
                     }else{
                         this.$Notice.error({
                             title:'验证失败',

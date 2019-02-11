@@ -1,5 +1,7 @@
 <template>
     <div>.
+        <Button @click="startTest"> 测试数据加载进度条</Button>
+        <Button @click="startTestOK"> 京都条OK</Button>
     </div>
 </template>
 
@@ -8,19 +10,32 @@
 		name: "six",
         data(){
 		    return {
-
+		        start:20,
+                percent:0,
+                isOk:false,
+                status:false,
             }
         },
         created:function () {
-            this.getData();
+            setTimeout(()=>{ this.status = true},2000)
         },
         methods:{
-		    getData(){
-		        this.$API.POST('/test/six/allPermission').then((data)=>{
-		            console.log()
-                });
+            startTest(){
+                this.$store.commit({
+                    type:'startLoadstatus',
+                    start:true,
+                    status:false,
+                })
+            },
+            startTestOK(){
+                this.$store.commit({
+                    type:'startLoadstatus',
+                    start:true,
+                    status:true,
+                })
             }
         }
+
 	}
 </script>
 

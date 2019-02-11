@@ -45,16 +45,17 @@ axios.interceptors.response.use(function (response) {
                     desc: '您没有权限继续访问！',
                     duration: 8,
                 });
+                // router.push('/login');
             }else {
                 Vue.prototype.$Notice.error({
                     title: '服务器状态码:' + error.response.status,
                     desc: '服务器返回了一个错误:' + error.response.data,
-                    duration: 8,
+                    duration: 0,
                 })
             }
-            console.log('error.response.data :' + error.response.data);
-            console.log('error.response.status :' + error.response.status);
-            console.log('error.response.headers :' , error.response.headers);
+            // console.log('error.response.data :' + error.response.data);
+            // console.log('error.response.status :' + error.response.status);
+            // console.log('error.response.headers :' , error.response.headers);
         // } else if (error.request) {
         //     // The request was made but no response was received
         //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -64,7 +65,7 @@ axios.interceptors.response.use(function (response) {
             Vue.prototype.$Notice.error({
                 title: '无法预料的错误',
                 desc: '抱歉！这是一个无法预知的错误',
-                duration: 8,
+                duration: 0,
             });
             
             // Something happened in setting up the request that triggered an Error

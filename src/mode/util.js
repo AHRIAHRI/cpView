@@ -69,6 +69,36 @@ const Util =
             userName:this.getStorage('userName'),
         });
     },
+    startProgress(){
+        store.commit({
+            type:'startLoadstatus',
+            start:true,
+            status:false,
+        })
+    },
+    successProgress(){
+        store.commit({
+            type:'startLoadstatus',
+            start:true,
+            status:true,
+        });
+        setTimeout(()=>{
+            store.commit({
+                type:'startLoadstatus',
+                start:false,
+                status:true,
+            })
+        },4000)
+    },
+    
+    stopProgress(){
+        store.commit({
+            type:'startLoadstatus',
+            start:false,
+            status:true,
+        })
+    },
+    
     /**
      * Force page refresh
      */

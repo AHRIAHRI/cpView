@@ -10,6 +10,10 @@ export default new Vuex.Store({
         selectProject:'',
         selectProjectName:'',
         userName:'',
+        progress:{
+            status:false,
+            start:false,
+        }
     },
     mutations: {
         storeMenu (state ,payload) {
@@ -19,7 +23,12 @@ export default new Vuex.Store({
             state.selectProject = payload.selectProject;
             state.selectProjectName = payload.selectProjectName;
             state.userName = payload.userName;
-        }
+        },
+        startLoadstatus(state,payload){
+            state.progress.start = payload.start;
+            state.progress.status = payload.status;
+        },
+
     },
     
 })

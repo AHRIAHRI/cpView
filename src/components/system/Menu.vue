@@ -1,5 +1,9 @@
 <template>
-  <div >
+  <div>
+      <div v-if="this.$store.state.progress.start"><CustomProgress :isOk="this.$store.state.progress.status" /></div>
+      <div v-else>
+          <Progress :percent="0" status="active" :stroke-width="3"  hide-info />
+      </div>
       <div style="width: 60%;">
       <Divider orientation="left">项目:
           <router-link :to="{ name: 'userSet'}">
@@ -54,6 +58,7 @@ export default {
                 desc: '请联系管理员授权之后，再刷新页面。',
                 duration: 0,
             });
+            // this.$router.push('notPermission');
         }else{
             // console.log('aaaaaaaaaaaaaaaaaaaa');
 

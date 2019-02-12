@@ -2,6 +2,18 @@ import axios from 'axios';
 import Vue from 'vue';
 import router from '../router';
 import { main } from 'Config/game' ;
+import iView from 'iview';
+Vue.use(iView);
+
+import Util from './util';
+
+iView.LoadingBar.config({
+    color: '#19be6b',
+    failedColor: '#ed4014',
+    height: 2
+});
+
+
 /**
  * 全局axios , 携带 token 进行请求
  */
@@ -16,6 +28,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.interceptors.request.use(
     function (config) {
         config.headers.Authorization = 'bearer '+ localStorage.getItem("token");
+        iView.LoadingBar.start();
         return config;
     },function(error){
         return Promise.reject(error);
@@ -25,16 +38,10 @@ axios.interceptors.request.use(
  * 添加一个响应拦截器
  */
 axios.interceptors.response.use(function (response) {
-    // if(response.data === 'permissionIsNotDefined'){
-    //     // this.$Modal.error({
-    //     Vue.prototype.$Modal.error({
-    //         title: '抱歉! 权限不足',
-    //         content: '请联系管理员',
-    //     });
-    // }else{
-        return response;
-    // }
+    iView.LoadingBar.finish();
+    return response;
 }, function (error) {
+    iView.LoadingBar.error();
     try {
         if (error.response) {
             // The request was made and the server responded with a status code

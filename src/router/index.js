@@ -27,14 +27,6 @@ const router = new Router({
 
 // 对所有的路由进行检查和统一分配 , 如果验证没通过则返回登录界面
 router.beforeResolve((to,from,next)=>{
-    
-    // 每次切换重新加载进度条
-    Store.commit({
-        type:'startLoadstatus',
-        start:false,
-        status:false,
-    });
-    
     if(to.name !== 'login' && ! Util.checkLogin()) {
         if(to.name !== 'home') {
             Vue.prototype.$Notice.error({

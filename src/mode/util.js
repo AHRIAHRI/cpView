@@ -82,20 +82,20 @@ const Util =
             start:true,
             status:true,
         });
-        setTimeout(()=>{
-            store.commit({
-                type:'startLoadstatus',
-                start:false,
-                status:true,
-            })
-        },4000)
+        // setTimeout(()=>{
+        //     store.commit({
+        //         type:'startLoadstatus',
+        //         start:false,
+        //         status:false,
+        //     })
+        // },3000)
     },
     
     stopProgress(){
         store.commit({
             type:'startLoadstatus',
             start:false,
-            status:true,
+            status:false,
         })
     },
     

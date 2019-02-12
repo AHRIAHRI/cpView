@@ -1,9 +1,5 @@
 <template>
   <div>
-      <div v-if="this.$store.state.progress.start"><CustomProgress :isOk="this.$store.state.progress.status" /></div>
-      <div v-else>
-          <Progress :percent="0" status="active" :stroke-width="3"  hide-info />
-      </div>
       <div style="width: 60%;">
       <Divider orientation="left">项目:
           <router-link :to="{ name: 'userSet'}">
@@ -69,6 +65,7 @@ export default {
         }
     },
     mounted:function () {
+        // this.$Util.successProgress();
     }
 }
 </script>

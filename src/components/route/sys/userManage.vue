@@ -502,7 +502,7 @@
                 this.$API.POST('/sys/userManage/roleUserInfo').then(({data})=>{
                         this.role.data = data.roleList ;               // 角色列表，包含角色的具体信息,提供权限是否选择的键值对。
                         this.user.data = data.userList ;               // 用户列表，包含用户的具体信息,
-                        this.$Message.info('数据刷新/加载');
+                        // this.$Message.info('数据刷新/加载');
                 });
             }
         },

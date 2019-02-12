@@ -7,8 +7,8 @@
                 <div>多天选择器&nbsp<i style="color: #19be6b">(多次单击可多选,只可以选择整天)</i></div>
             </div>
 
-        <DatePicker split-panels v-show="disable" size="small" type="datetimerange" placeholder="区间选择器" style="width: 300px" @on-change="changeTime" v-model="value"  ></DatePicker>
-        <DatePicker show-week-numbers v-show="!disable" size="small" type="date" multiple placeholder="多天选择器" style="width: 300px" @on-change="changeTime" v-model="value"  ></DatePicker>
+        <DatePicker split-panels v-show="disable"  type="datetimerange" placeholder="区间选择器" style="width: 300px" @on-change="changeTime" v-model="value"  ></DatePicker>
+        <DatePicker show-week-numbers v-show="!disable" type="date" multiple placeholder="多天选择器" style="width: 300px" @on-change="changeTime" v-model="value"  ></DatePicker>
         &nbsp&nbsp
         <Button size="small" shape="circle" icon="ios-switch-outline"  @click="changeSelectTimeController"></Button>
         </Tooltip>

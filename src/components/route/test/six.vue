@@ -1,7 +1,16 @@
 <template>
     <div>.
-        <Button @click="startTest"> 测试数据加载进度条</Button>
-        <Button @click="startTestOK"> 京都条OK</Button>
+        <CustomFilter :optionData="optionDataTemp" @sendDataEven="selectDataEven">
+            <template slot="otherOption">
+                <!--在组件中添加额外的选项-->
+            <FormItem>
+                <Select v-model="filterData.chatType" placeholder="聊天类型" filterable multiple style="width: 100%">
+                    <Option v-for="item in optionData.chatType" :value="item.value" :key="item.value">{{ item.value }}</Option>
+                </Select>
+            </FormItem>
+            </template>
+        </CustomFilter>
+        {{selectData}}
     </div>
 </template>
 
@@ -11,28 +20,31 @@
         data(){
 		    return {
 		        start:20,
-                percent:0,
-                isOk:false,
-                status:false,
+                selectData:{},
+                filterData:{
+                    chatType:'',
+                },
+                optionData:{
+                    chatType:'',
+                },
+                optionDataTemp:{
+                    plat:[],
+                    channel:[],
+                    level:{
+                        min:1,
+                        max:1000,
+                    }
+                },
             }
         },
         created:function () {
-            setTimeout(()=>{ this.status = true},2000)
+		    this.$API.POST('/test/six/test').then(({data})=>{
+		        console.log(data)
+            })
         },
         methods:{
-            startTest(){
-                this.$store.commit({
-                    type:'startLoadstatus',
-                    start:true,
-                    status:false,
-                })
-            },
-            startTestOK(){
-                this.$store.commit({
-                    type:'startLoadstatus',
-                    start:true,
-                    status:true,
-                })
+            selectDataEven(val){
+                this.selectData = val;
             }
         }
 

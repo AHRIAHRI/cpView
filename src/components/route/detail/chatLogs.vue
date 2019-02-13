@@ -76,10 +76,10 @@
 <script>
 	export default {
 		name: "chatLog",
-        // TODO 相同和不通组件的抽离
+        //  相同和不通组件的抽离 ,(解决方案,使用slot不同的加载) action中返回基础组件中的option
         // TODO option 的翻译配置数据中的翻译配置 这个是难点
         // TODO 平台->渠道的联动选择
-        // TODO 数据库中option的分类
+        //  数据库中option的分类 Action 类中已经处理了
         // TODO 选项的保持 vuex 中
         data(){
 		    return {

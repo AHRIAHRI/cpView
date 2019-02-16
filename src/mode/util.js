@@ -60,6 +60,8 @@ const Util =
     /**
      * 有几个地方会进行重载
      * 登录的时候 ，菜单栏加载的时候，修改选着的项目的时候，登录之后由于某种原因没加载到的时
+     * -------------------------------------------------------------------------
+     * 已弃用
      */
     reloadUserInfo(){
         store.commit({
@@ -100,6 +102,7 @@ const Util =
     },
     
     /**
+     * -------------------------------------------------------------------------
      * Force page refresh
      */
     windowsReload(){
@@ -152,6 +155,37 @@ const Util =
         return result;
     },
     
+    /**
+     * 加载翻译数据，数据是在vuex中拿过来的，如果vuex中没有数据，则不进行加载，原样返回
+     */
+    render: {
+        /**
+         * @param rawData Array [{a:1,b:'shopby',c:3},{a:'111',b:'fromItem',c:'bbbbbbbbbbbb'}]
+         * @param renderData Object {b:{fromItem:'物品列表',shopby:'商城购买'},c:{3:'测试3'}}
+         * @returns {*}
+         */
+        query(rawData,renderData={}) {
+            if(Object.keys(renderData).length === 0){
+                return rawData
+            }
+            for (let index in rawData){
+                for(let itemIndex in rawData[index]){
+                    // 如果存在需要翻译
+                    if(Object.keys(renderData).indexOf(itemIndex) !== -1 ){
+                        if(renderData[itemIndex].hasOwnProperty(rawData[index][itemIndex])){
+                            rawData[index][itemIndex] = renderData[itemIndex][rawData[index][itemIndex]];
+                        }
+                    }
+                }
+            }
+            return rawData;
+        },
+        /**
+         * 获取翻译的数据，并且保存到vux中
+         */
+        getRenderData(){
+        }
+    },
     getMeun(){}
     
 };

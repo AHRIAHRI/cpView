@@ -65,6 +65,8 @@ export default {
         }
     },
     mounted:function () {
+
+        // TODO 加载翻译 如果没有尝试去加载翻译 这里应该去调用Util中的方法
         // this.$Util.successProgress();
     }
 }

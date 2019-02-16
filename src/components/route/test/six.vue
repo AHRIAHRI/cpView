@@ -38,9 +38,15 @@
             }
         },
         created:function () {
-		    this.$API.POST('/test/six/test').then(({data})=>{
-		        console.log(data)
-            })
+            this.$API.POST('/detail/chatLogs/options').then(({data})=>{
+                // 拿到数据之后 ，前端来组装
+                // console.log(data)
+                // 渠道号,platAndChannel 的key，然后拼接起来翻译的alias
+                // 计算属性中计算出 channel 和平台号，
+                // server id 同理，需要排序
+            });
+            console.log('aaaaaaaaa');
+            console.log(this.$Util.render.query([{a:1,b:'shopby',c:3},{a:'111',b:'fromItem',c:'bbbbbbbbbbbb'}]))
         },
         methods:{
             selectDataEven(val){

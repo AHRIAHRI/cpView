@@ -1,70 +1,28 @@
 <template>
-    <div style="margin: auto;width: 90%">
+    <div style="margin: auto;width: 95%">
         <Collapse simple>
             <Panel name="1">
                 打开条件过滤
-                <Form :model="filterData" slot="content" :label-width="80">
-                <!--<div slot="content"  style="margin: auto;width: 90%">-->
-
-                    <FormItem>
-                            <Select v-model="filterData.plat" placeholder="选择平台" filterable multiple style="width: 100%">
-                                <Option v-for="item in optionData.plat" :value="item.value" :key="item.value">{{ item.alias }}</Option>
-                            </Select>
-                    </FormItem>
-                    <FormItem>
-                        <Select v-model="filterData.channel" placeholder="选择渠道" filterable multiple style="width: 100%">
-                            <Option v-for="item in optionData.channel" :value="item.value" :key="item.value">{{ item.alias }}</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem>
-                        <Select v-model="filterData.chatType" placeholder="聊天类型" filterable multiple style="width: 100%">
-                            <Option v-for="item in optionData.chatType" :value="item.value" :key="item.value">{{ item.value }}</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem>
-                        <Col span="8">
-                            <!--角色名:-->
-                            <Input v-model="filterData.gameServerID" placeholder="游戏服务器ID" clearable style="width: 80%" />
-                        </Col>
-                        <Col span="8">
-                            <!--角色名:-->
-                            <Input v-model="filterData.rawGameServerID" placeholder="原始游戏服务器ID(合服前)" clearable style="width: 80%" />
-                        </Col>
-
-                    </FormItem>
-
-                    <FormItem>
-                        <Col span="8">
-                            <!--角色名:-->
-                            <Input v-model="filterData.roleName" placeholder="模糊匹配角色名" clearable style="width: 80%" />
-                        </Col>
-                        <Col span="8">
-                            <!--角色ID:-->
-                            <Input v-model="filterData.roleID" placeholder="角色ID" clearable style="width: 80%" />
-                        </Col>
-                        <Col span="8">
-                            <!--用户ID:-->
-                            <Input v-model="filterData.userAccount" placeholder="玩家用户ID" clearable style="width: 80%" />
-                        </Col>
-                    </FormItem>
-                    <FormItem>
-                        <CustomDate @send_time="getSelectData" />
-                    </FormItem>
-                    <FormItem>
-                        <Slider :min="optionData.level.min" :max="optionData.level.max" v-model="filterData.rangeLevel"  :tip-format="format" range></Slider>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="success" ghost long>加入过滤</Button>
-                    </FormItem>
-
-                <!--</div>-->
-                </Form>
+                <div slot="content">
+                    <ChatLogFilter @sendDataEven="selectDataEven">
+                        <!--<template slot="otherOption">-->
+                            <!--&lt;!&ndash;在组件中添加额外的选项&ndash;&gt;-->
+                            <!--&lt;!&ndash;<FormItem>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<Select v-model="filterData.chatType" placeholder="聊天类型" filterable multiple style="width: 100%">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<Option v-for="item in chatTypeOption" :value="item.value" :key="item.value">{{ item.value }}</Option>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</Select>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
+                        <!--</template>-->
+                    </ChatLogFilter>
+                </div>
             </Panel>
         </Collapse>
-        <Divider orientation="left"></Divider>
-        当前过滤条件
+        <!--<Divider orientation="left"></Divider>-->
         <br>
+        当前过滤条件:
         {{filterData}}
+        <hr>
+        <!--{{handleOptionData}}-->
         <Divider orientation="left"></Divider>
         <Page :page-size="pageSize" :page-size-opts="pageSizeOption" :total="total" @on-change="changePage" @on-page-size-change="changePageSize" prev-text="上一页" next-text="下一页" show-total show-sizer show-elevator />
         <Divider orientation="left"></Divider>
@@ -96,28 +54,13 @@
                     rawGameServerID:'',
 
                 },
-                optionData:{
-		            chatType:[
-                        {value:'公会'},
-                        {value:'私聊'},
-                        {value:'世界'},
-                    ],
-                    plat:[
-                        {value:'s00',alias:"诗悦买量"},
-                        {value:'ms1',alias:"融合买量"},
-                    ],
-                    channel:[
-                        {value:'ms1/7',alias:"融合买量/应用宝"},
-                        {value:'s00/s12',alias:"诗悦买量/s12渠道"},
-                    ],
-                    level:
-                        {min:1,max:1000}
-                },
-
+                // OptionData:this.handleOptionData(),
+                // optionDataTemp:{},
+                chatTypeOption:{},
                 logs:[],
                 total:0,
                 pageSize:20,
-                pageSizeOption:[20,50,100,200],
+                pageSizeOption:[20,50,100,200,500],
                 columns:[
                     {title:'角色名', key:'rolename',width:100,fixed:'left'},
                     {title:'类型', key:'chattype',width:80},
@@ -130,8 +73,12 @@
                     {title:'等级', key:'rolelevel',width:80},
                     {title:'内容', key:'content',fixed:'left',minWidth:500},
                     {title:'时间', key:'generatetime',width:200},
-                ]
+                ],
+                // OptionData:handleOptionData(),
             };
+        },
+        components:{
+            ChatLogFilter:()=>import('@/components/system/ChatLogFilter'),
         },
         methods:{
             format(val){
@@ -143,8 +90,8 @@
                     this.total =  data.total ;
                 })
             },
-            getSelectData(time){
-                this.filterData.rangeTime = time
+            selectDataEven(val){
+                this.filterData = val;
             },
             changePage(page){
                 this.getData(page, this.pageSize);
@@ -155,6 +102,7 @@
             }
         },
         created:function () {
+		    // this.getOptionData();
             this.getData(1, this.pageSize);
         }
 	}

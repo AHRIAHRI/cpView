@@ -13,7 +13,9 @@ export default new Vuex.Store({
         progress:{
             status:false,
             start:false,
-        }
+        },
+        // 翻译的内容
+        render:{},
     },
     mutations: {
         storeMenu (state ,payload) {

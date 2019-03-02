@@ -18,7 +18,7 @@ iView.LoadingBar.config({
  * 全局axios , 携带 token 进行请求
  */
 if( process.env.NODE_ENV === 'production') {
-    axios.defaults.baseURL = 'http://data.apidev.fengbaogame.cn/api/v1/';
+    axios.defaults.baseURL = 'https://api.data.fengbaogame.cn/api/v1/';
 }
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 

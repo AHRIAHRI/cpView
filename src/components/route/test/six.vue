@@ -38,7 +38,7 @@
             }
         },
         created:function () {
-            this.$API.POST('/detail/chatLogs/options').then(({data})=>{
+            this.$API.POST('/sys/plat/allPlat').then(({data})=>{
                 // 拿到数据之后 ，前端来组装
                 // console.log(data)
                 // 渠道号,platAndChannel 的key，然后拼接起来翻译的alias

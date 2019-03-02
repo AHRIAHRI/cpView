@@ -22,7 +22,6 @@
                     <!--<platAndChannel v-model="table1.data[index].plat"></platAndChannel>-->
                 <!--</template>-->s
             </Table>
-            {{data}}
             <div slot="footer" style="width:8%;margin-left: auto;" >
                 <Button type="error" long @click="commitModify">确定</Button>
             </div>
@@ -61,14 +60,25 @@
                 }
             },
         methods:{
-
             loadFatherData(data){
                 this.isShow = true ;
                 this.title = '给用户[ ' + data.user + ' ]平台渠道授权';
+                this.user = data.user ;
                 this.data = [data.platChannel];
             },
             commitModify(){
                 this.isShow = false;
+                // 提交授权
+                this.$API.POST('/sys/plat/commitAuthorization',{user:this.user,data:this.data}).then(({data}) => {
+                        if(data.status){
+                            this.$Notice.success({title:'用户渠道权限修改成功',});
+                            // 通知付组件刷新接口
+
+                        }else{
+                            this.$Notice.error({title:'用户渠道权限修改失败',});
+                        }
+                    }
+                )
             },
             change(status){
                 this.$refs.platAndChannel.getprojectDisabled(status)

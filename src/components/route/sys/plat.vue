@@ -30,11 +30,14 @@
             }
         },
         created:function () {
-            this.$API.POST('/sys/plat/allPlat').then(({data})=>{
-                this.userPlatChannel = data;
-            });
+            this.getData();
         },
         methods:{
+		    getData(){
+                this.$API.POST('/sys/plat/allPlat').then(({data})=>{
+                    this.userPlatChannel = data;
+                });
+            },
 		    show(data){
                 this.$refs.platChannelModal.loadFatherData(data)
             }

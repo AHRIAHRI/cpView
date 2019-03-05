@@ -10,6 +10,7 @@ export default new Vuex.Store({
         selectProject:'',
         selectProjectName:'',
         userName:'',
+        allPerjectPermission:false,
         progress:{
             status:false,
             start:false,
@@ -30,6 +31,9 @@ export default new Vuex.Store({
             state.progress.start = payload.start;
             state.progress.status = payload.status;
         },
+        modifySelectProject(state,payload){
+            state.allPerjectPermission = payload.status
+        }
 
     },
     

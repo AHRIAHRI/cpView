@@ -11,16 +11,8 @@
                     <i-switch v-model="data[index].all" @on-change="change" />
                 </template>
                 <template slot-scope="{index}"  slot="plat">
-                    <!--开启整个平台-->
-                    <platAndChannel ref="platAndChannel"  v-model="data[index].plats" ></platAndChannel>
-                    <!--<Table :columns="table2.columns" :data="data[index].plats">-->
-
-                    <!--</Table>-->
+                    <PlatAndChannel ref="platAndChannel"  v-model="data[index].plats" ></PlatAndChannel>
                 </template>
-
-                <!--<template slot-scope="{ index }" slot="plat">-->
-                    <!--<platAndChannel v-model="table1.data[index].plat"></platAndChannel>-->
-                <!--</template>-->s
             </Table>
             <div slot="footer" style="width:8%;margin-left: auto;" >
                 <Button type="error" long @click="commitModify">确定</Button>
@@ -34,10 +26,14 @@
 <script>
 	export default {
 		name: "AuthorizationPlatChannel",
+        // components:{
+        //     platAndChannel:()=>import('@/components/system/PlatAndChannel'),
+        // },
         data(){
             return {
                 isShow: false,
                 title: '',
+                projectDisabled:false,
                 data: [],
                 table1: {
                     columns: [
@@ -46,17 +42,7 @@
                         // {title: '渠道',align:'center',slot:'channel'},
                     ],
                     data :[],
-                },
-                table2: {
-                    columns: [
-                        // {title: '全部项目',align:'center',slot:'project'},
-                        // {title: '平台',align:'center',slot:'plat'},
-                        // {title: '渠道',align:'center',slot:'channel'},
-                    ],
-                },
-
-
-
+                    },
                 }
             },
         methods:{
@@ -72,8 +58,8 @@
                 this.$API.POST('/sys/plat/commitAuthorization',{user:this.user,data:this.data}).then(({data}) => {
                         if(data.status){
                             this.$Notice.success({title:'用户渠道权限修改成功',});
-                            // 通知付组件刷新接口
-
+                            // 通知上层组件刷新接口
+                            this.$emit('refreshInterfacte',true)
                         }else{
                             this.$Notice.error({title:'用户渠道权限修改失败',});
                         }
@@ -81,7 +67,11 @@
                 )
             },
             change(status){
-                this.$refs.platAndChannel.getprojectDisabled(status)
+                // 不要问我为什么这里用vuex,无奈之举,这里出现了一个傻逼样的BUG.
+                this.$store.commit({
+                    type:'modifySelectProject',
+                    status:status,
+                });
             }
         }
 	}

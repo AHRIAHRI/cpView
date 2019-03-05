@@ -43,7 +43,7 @@
 		    return {
 		        filterData:{
                     chatType:'',
-                    plat:'',
+                    plat: [ "qp1" ],
                     channel:'',
                     roleName:'',
                     roleID:'',
@@ -70,7 +70,7 @@
                     {title:'服ID', key:'serverid',width:100},
                     {title:'账号', key:'accountid',width:150},
                     {title:'角色ID', key:'roleid',width:180},
-                    {title:'等级', key:'rolelevel',width:80},
+                    {title:'等级', key:'rolelevel',width:80,sortable: true},
                     {title:'内容', key:'content',fixed:'left',minWidth:500},
                     {title:'时间', key:'generatetime',width:200},
                 ],
@@ -85,7 +85,7 @@
                 return '等级范围取值 ' + val + " 级";
             },
             getData(currentPage,pageNum){
-		        this.$API.POST('/detail/chatLogs/logs', {currentPage:currentPage, pageNum:pageNum}).then(({data})=>{
+		        this.$API.POST('/detail/chatLogs/logs', Object.assign({currentPage:currentPage, pageNum:pageNum},this.filterData)).then(({data})=>{
 		            this.logs =  data.data ;
                     this.total =  data.total ;
                 })

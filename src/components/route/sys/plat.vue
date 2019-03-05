@@ -2,15 +2,15 @@
     <div>
         <!--用户所有的项目平台授权;-->
         <!--需要返回这个项目下的所有角色，如果没有特殊配置，则为all-->
-        <AuthorizationPlatChannel ref="platChannelModal"></AuthorizationPlatChannel>
+        <AuthorizationPlatChannel ref="platChannelModal" @refreshInterfacte="refresh"></AuthorizationPlatChannel>
         <div style="margin: auto;width: 60%">
         <Table stripe :columns="columns1" :data="userPlatChannel" >
             <template slot-scope="{ row, index }" slot="platChannel">
-                <Button type="primary"   @click="show(row)">查看权限</Button>
+                <Button type="primary"   @click="show(row)">查看 / 修改渠道权限</Button>
             </template>
         </Table>
         </div>
-        {{userPlatChannel}}
+        <!--{{userPlatChannel}}-->
     </div>
 </template>
 
@@ -35,11 +35,14 @@
         methods:{
 		    getData(){
                 this.$API.POST('/sys/plat/allPlat').then(({data})=>{
-                    this.userPlatChannel = data;
+                    this.userPlatChannel = data ;
                 });
             },
 		    show(data){
                 this.$refs.platChannelModal.loadFatherData(data)
+            },
+            refresh(){
+                this.getData();
             }
         }
 	}

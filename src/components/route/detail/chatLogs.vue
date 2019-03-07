@@ -43,12 +43,13 @@
 		    return {
 		        filterData:{
                     chatType:'',
-                    plat: [ "qp1" ],
+                    plat:'',
                     channel:'',
                     roleName:'',
                     roleID:'',
                     userAccount:'',
                     rangeTime:'',
+                    openLevel:false,
                     rangeLevel:[1,1000],
                     gameServerID:'',
                     rawGameServerID:'',
@@ -85,7 +86,7 @@
                 return '等级范围取值 ' + val + " 级";
             },
             getData(currentPage,pageNum){
-		        this.$API.POST('/detail/chatLogs/logs', Object.assign({currentPage:currentPage, pageNum:pageNum},this.filterData)).then(({data})=>{
+		        this.$API.POST('/detail/chatLogs/logs', {currentPage:currentPage, pageNum:pageNum, filter:this.filterData}).then(({data})=>{
 		            this.logs =  data.data ;
                     this.total =  data.total ;
                 })

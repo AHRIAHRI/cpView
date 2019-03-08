@@ -47,13 +47,14 @@
                 等级过滤 &nbsp;: <i-switch v-model="filterData.openLevel" />
                 <Slider :disabled="!filterData.openLevel" :min="optionLevMin" :max="optionLevMax" v-model="filterData.rangeLevel"  :tip-format="format" range></Slider>
             </FormItem>
-            <!--<FormItem>-->
-                <!--<Button type="success" ghost long>加入过滤</Button>-->
-            <!--</FormItem>-->
+            <FormItem>
+                <Button type="success" ghost long @click="buttonClick">加入过滤</Button>
+            </FormItem>
             <!--</div>-->
             <slot name="otherOption"></slot>
 
         </Form>
+        <!--<div style="height: 100px"></div>-->
     </div>
 </template>
 
@@ -145,6 +146,9 @@
                 this.$API.POST('/detail/chatLogs/options').then(({data})=>{
                     this.rawOptionData = data;
                 })
+            },
+            buttonClick(){
+                this.$emit('isclick');
             },
             /**
              * 处理获取的选项数据

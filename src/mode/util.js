@@ -108,6 +108,24 @@ const Util =
     windowsReload(){
         window.location.reload() ;
     },
+    time:function() {
+        let date = new Date();
+        let seperator1 = "_";
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let strDate = date.getDate();
+        let houts = date.getHours();
+        let min = date.getMinutes();
+        let seconds = date.getSeconds();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        return year + seperator1 + month + seperator1 + strDate + seperator1 + houts + seperator1 + min + seperator1 + seconds;
+
+    },
     
     /**
      * @returns {Array}

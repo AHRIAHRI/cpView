@@ -108,6 +108,9 @@ const Util =
     windowsReload(){
         window.location.reload() ;
     },
+    arrayHas(array,element){
+        return array.indexOf(element) !== -1
+    },
     time:function() {
         let date = new Date();
         let seperator1 = "_";

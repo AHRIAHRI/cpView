@@ -3,6 +3,8 @@
     <!--<img src="./assets/logo.png">-->
       <router-view name="main"></router-view>
       <router-view/>
+      <br>
+      <!--<div style="color: #515a6e;">沉思往夕立残阳，当时只道是寻常</div>-->
   </div>
 </template>
 

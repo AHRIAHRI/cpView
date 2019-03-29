@@ -4,8 +4,8 @@
             <Panel name="1">
                 打开条件过滤
                 <div slot="content">
-                    <ChatLogFilter @sendDataEven="selectDataEven" @isclick="reloadRequest">
-                    </ChatLogFilter>
+                    <GeneralFilter :rawOptionData="rawOptionData" @sendDataEven="selectDataEven" @isclick="reloadRequest">
+                    </GeneralFilter>
                 </div>
             </Panel>
         </Collapse>
@@ -46,6 +46,7 @@
                 logs:[],
                 total:0,
                 pageSize:100,
+                rawOptionData:{},
                 pageSizeOption:[20,50,100,200,500],
                 columns:[
                     {title:'角色名', key:'rolename',width:100,fixed:'left',sortable: true},
@@ -63,7 +64,7 @@
             };
         },
         components:{
-            ChatLogFilter:()=>import('@/components/system/ChatLogFilter'),
+            GeneralFilter:()=>import('@/components/system/GeneralFilter'),
         },
         methods:{
             format(val){
@@ -73,6 +74,12 @@
 		        this.$API.POST('/detail/chatLogs/logs', {currentPage:currentPage, pageNum:pageNum, filter:this.filterData}).then(({data})=>{
 		            this.logs =  data.data ;
                     this.total =  data.total ;
+                })
+            },
+
+            getOptionData(){
+                this.$API.POST('/detail/chatLogs/options').then(({data})=>{
+                    this.rawOptionData = data;
                 })
             },
             selectDataEven(val){
@@ -88,15 +95,17 @@
             reloadRequest(){
                 this.getData(1, this.pageSize);
             },
+
             exportData(){
                 this.$refs.table.exportCsv({
-                    filename: 'chatLgo_'+this.$Util.time(),
+                    filename: '聊天_'+this.$Util.time(),
                     original: false
                 });
             }
         },
         created:function () {
             this.getData(1, this.pageSize);
+            this.getOptionData();
         }
 	}
 </script>

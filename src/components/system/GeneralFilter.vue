@@ -60,7 +60,7 @@
 
 <script>
 	export default {
-		name: "ChatLogFilter",
+		name: "GeneralFilter",
         data(){
 		    return {
                 switchStatus:false,
@@ -87,13 +87,13 @@
                     openLevel:false,
                     rangeLevel:[100,200]
                 },
-                rawOptionData:{
-                    platAndChannel:{},
-                    serverIDs:{},
-                    rawServerIDs:{},
-                    lvMax:1000,
-                    lvMin:0,
-                },
+                // rawOptionData:{
+                //     platAndChannel:{},
+                //     serverIDs:{},
+                //     rawServerIDs:{},
+                //     lvMax:1000,
+                //     lvMin:0,
+                // },
             }
         },
         computed:{
@@ -131,6 +131,7 @@
                 return this.optionData.level.max;
             },
         },
+        props:['rawOptionData'],
         methods:{
             getSelectTime(time){
                 this.filterData.rangeTime = time
@@ -139,14 +140,6 @@
                 return '等级范围取值 ' + val + " 级";
             },
 
-            /**
-             * 获取原始数据
-             */
-            getOptionData(){
-                this.$API.POST('/detail/chatLogs/options').then(({data})=>{
-                    this.rawOptionData = data;
-                })
-            },
             buttonClick(){
                 this.$emit('isclick');
             },
@@ -196,9 +189,9 @@
 
 
         },
-        created:function () {
-            this.getOptionData();
-        },
+        // created:function () {
+        //     this.rawOptionData = this.inputdata;
+        // },
         watch: {
             filterData: {
                 handler(val,oldval){
